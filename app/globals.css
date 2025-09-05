@@ -13,11 +13,16 @@
   --color-black-2: #333333;
   --color-black-3: #444444;
   --color-black-4: #555555;
+  --color-error-1: #cd4e55;
+  --shadow-list: 0px 0px 4px #dadada;
 
 }
 
 @layer base {
   body {
+    @apply h-svh;
     @apply bg-background-white;
+    @apply font-nunito-sans;
+    @apply text-black-1;
   }
 }

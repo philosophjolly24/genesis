@@ -19,7 +19,7 @@ const databaseAPI = {
     return await db.lists.get(listId);
   },
   // Retrieve all lists (use with useLiveQuery)
-  getAllLists: async () => await db.lists.toArray(),
+  getAllLists: () => db.lists.toArray(),
 
   // Update a specific list
   updateList: async (listId: string, updatedList: Partial<List>) => {
@@ -51,7 +51,13 @@ const databaseAPI = {
 
   // Update a specific list
   updateItem: async (itemId: string, updatedItem: Partial<Item>) => {
-    return await db.items.update(itemId, updatedItem);
+    const updated = await db.items.update(itemId, updatedItem);
+    if (updated) console.log(`The list was updated successfully`);
+    else
+      console.log(
+        `Nothing was updated - there was no list with the id: ${itemId}`
+      );
+    return updated;
   },
   // ================================================ //
 
@@ -83,6 +89,7 @@ const databaseAPI = {
   ) => {
     return await db.categories.update(categoryId, updatedCategory);
   },
+
   // ================================================ //
 };
 
