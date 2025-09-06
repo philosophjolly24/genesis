@@ -46,7 +46,7 @@ const databaseAPI = {
   // Retrieves all items for a target list
   getAllItemsForList: (listId: string) => {
     // return the query to that you can use it in useLiveQuery
-    return db.items.where("list_id").equals(listId);
+    return db.items.where("list_id").equals(listId).toArray();
   },
 
   // Update a specific list

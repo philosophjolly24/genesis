@@ -1,5 +1,9 @@
+// * re-usable modal window component
+
+// Imports
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
+// Interfaces
 interface ModalProps {
   height: number;
   children: ReactNode;
@@ -7,6 +11,7 @@ interface ModalProps {
   setIsModalVisible: Dispatch<SetStateAction<boolean>>;
 }
 
+// Main component
 export default function Modal({
   height,
   children,

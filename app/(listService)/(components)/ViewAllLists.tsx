@@ -6,6 +6,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useRef, useState } from "react";
 import ListIconPicker from "../../(components)/ListIcon";
 import Link from "next/link";
+import ProgressBar from "../../(components)/ProgressBar";
 
 export default function ViewAllLists() {
   const lists = useLiveQuery(() => databaseAPI.getAllLists()) || [];
@@ -39,11 +40,8 @@ export default function ViewAllLists() {
                   ListEmojiIcon={list.emoji ?? "🛒"}
                   ref={popoverRef}
                 ></ListIconPicker>
-                <Link href={`../../${list.id}`} className="grow">
-                  <p
-                    className="text-lg font-nunito-sans grow ml-3 mr-3 text-center"
-                    ref={popoverRef}
-                  >
+                <Link href={`../../${list.id}`} className="grow max-w-[50%]">
+                  <p className=" block text-lg font-nunito-sans grow ml-3 mr-3 text-left max-h-7 w-fill truncate">
                     {list.name}
                   </p>
                 </Link>
@@ -56,7 +54,8 @@ export default function ViewAllLists() {
                   className="mr-3"
                 ></Image>
               </div>
-              <div className="h-1 bg-grey w-[90%] m-auto mb-2 block rounded"></div>
+              {/*  progressbar comes here */}
+              <ProgressBar></ProgressBar>
             </li>
           ))}
         </ul>

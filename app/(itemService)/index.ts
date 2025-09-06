@@ -1,31 +1,37 @@
-import { Item } from "../(database)/database";
-import { databaseAPI } from "../(database)/api/api";
 import { v7 as uuidv7 } from "uuid";
+import { databaseAPI } from "../(database)/api/api";
+import { Dispatch, SetStateAction } from "react";
 
-const itemAPI = {
-  CreateItem: async (item: Partial<Item>) => {
-    try {
-      // validation for fields/ item
-      if (item.name == undefined) {
-        // error handling
-        throw new Error("Field may not be empty");
-      }
-      if (item.name.trim() == "") {
-        // error handling
-        throw new Error("Enter a valid item name");
-      }
-      // retrieve current list_id from localstorage
-      // ? (might using url parameter later)
+interface Item {
+  id: string;
+  list_id: string; // foreign key
+  name: string;
+  category_id?: number; // foreign key
+  quantity?: number;
+  unit?: string;
+  price?: number;
+  notes?: string;
+}
 
-      // add item to database
-      await databaseAPI.addItem({
-        id: uuidv7(),
-        ...item,
-      });
-    } catch (error) {
-      console.log(error);
+const handleAddItemToList = (
+  item: Item,
+  setIsEmpty: Dispatch<SetStateAction<boolean | null>>
+) => {
+  // validate all fields
+  try {
+    if (item.name.trim() == "") {
+      setIsEmpty(true);
+      return;
     }
-  },
-  
+    if (item.list_id.trim() == "") {
+      throw new Error("list not found ");
+    }
+
+    // add item to table
+    databaseAPI.addItem(item);
+    
+  } catch (err) {
+    console.error(err);
+  }
 };
-export { itemAPI };
+export { handleAddItemToList };

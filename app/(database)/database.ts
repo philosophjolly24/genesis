@@ -8,12 +8,14 @@ interface Item {
   id: string;
   list_id?: string; // foreign key
   category_id?: number; // foreign key
+  price?: number;
+  unit?: string;
   quantity?: number;
   name?: string;
   notes?: string;
 }
 interface List {
-  id?: string;
+  id: string;
   emoji?: string;
   name: string;
   created_at: number;

@@ -1,14 +1,20 @@
+// * Emoji picker component
+
 "use client";
 
+// Imports
 import { EmojiPicker } from "frimousse";
 import { Dispatch, SetStateAction } from "react";
 import { databaseAPI } from "../(database)/api/api";
 
+// Interfaces
 interface ListIconEmojiPickerProps {
   isPickerVisible: boolean;
   setIsPickerVisible: Dispatch<SetStateAction<boolean>>;
   list_id: string;
 }
+
+// Main component
 export default function ListIconEmojiPicker({
   isPickerVisible,
   setIsPickerVisible,
