@@ -6,13 +6,14 @@ interface Category {
 }
 interface Item {
   id: string;
-  list_id?: string; // foreign key
+  list_id: string; // foreign key
   category_id?: number; // foreign key
   price?: number;
   unit?: string;
   quantity?: number;
-  name?: string;
+  name: string;
   notes?: string;
+  checked?: boolean;
 }
 interface List {
   id: string;

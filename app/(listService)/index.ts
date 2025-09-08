@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { databaseAPI } from "../(database)/api/api";
 import { v7 as uuidv7 } from "uuid";
+import { List } from "../(database)/api/api";
 
 interface handleCreateNewListParams {
   listName: string;
@@ -10,21 +11,19 @@ interface handleCreateNewListParams {
   setIsEmpty: Dispatch<SetStateAction<boolean>>;
 }
 
+// * handler function for creating a new list
 const handleCreateNewList = async ({
   listName,
   setIsVisible,
   setIsEmpty,
 }: handleCreateNewListParams) => {
-  // check if list name is valid(cannot be empty)
+  // INFO: check if list name is valid(cannot be empty)
   if (listName.trim() == "") {
-    // send error if name is invalid
-    setIsEmpty(true);
+    setIsEmpty(true); //* set the error state to true
     return;
   }
-  // create a new list
-  //   const list_id = uuidv7() ;
 
-  //   localStorage.setItem("currentList", list_id);
+  // add the list to the database
   await databaseAPI.addList({
     id: uuidv7(),
     name: listName,
@@ -32,8 +31,20 @@ const handleCreateNewList = async ({
     updated_at: Date.now(),
     emoji: "🛒",
   });
-  // toggle the modal to disappear
+
+  // close modal window
   setIsVisible(false);
 };
 
-export { handleCreateNewList };
+// INFO: asyncSetListId: set the current list id to retrieve the list items
+async function asyncSetListId(
+  setListID: Dispatch<SetStateAction<string>>,
+  setList: Dispatch<SetStateAction<List | null>>,
+  params: Promise<{ slug: string }>,
+  listID: string
+) {
+  setListID((await params).slug);
+  setList((await databaseAPI.getList(listID)) ?? null);
+}
+
+export { handleCreateNewList, asyncSetListId };

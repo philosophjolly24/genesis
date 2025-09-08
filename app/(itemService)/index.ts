@@ -1,17 +1,7 @@
 import { v7 as uuidv7 } from "uuid";
-import { databaseAPI } from "../(database)/api/api";
+import { databaseAPI, List } from "../(database)/api/api";
 import { Dispatch, SetStateAction } from "react";
-
-interface Item {
-  id: string;
-  list_id: string; // foreign key
-  name: string;
-  category_id?: number; // foreign key
-  quantity?: number;
-  unit?: string;
-  price?: number;
-  notes?: string;
-}
+import { Item } from "../(database)/api/api";
 
 const handleAddItemToList = (
   item: Item,
@@ -29,9 +19,11 @@ const handleAddItemToList = (
 
     // add item to table
     databaseAPI.addItem(item);
-    
   } catch (err) {
     console.error(err);
   }
 };
+
+// item count for the checked items progress bar
+
 export { handleAddItemToList };

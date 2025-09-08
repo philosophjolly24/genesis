@@ -94,3 +94,4 @@ const databaseAPI = {
 };
 
 export { databaseAPI };
+export type { List, Item };

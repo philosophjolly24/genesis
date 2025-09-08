@@ -1,5 +1,5 @@
 "use client";
-
+// Imports
 import Image from "next/image";
 import { databaseAPI } from "../../(database)/api/api";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import ListIconPicker from "../../(components)/ListIcon";
 import Link from "next/link";
 import ProgressBar from "../../(components)/ProgressBar";
+import CheckedItemCount from "../../(components)/CheckedItemCount";
 
 export default function ViewAllLists() {
   const lists = useLiveQuery(() => databaseAPI.getAllLists()) || [];
@@ -21,11 +22,14 @@ export default function ViewAllLists() {
         <>
           <Image
             width={76}
-            height={376}
+            height={76}
             src={"no-lists.svg"}
             alt="No-lists"
+            className="object-cover max-w-90 max-h-90 w-[80%] h-[80%] m-auto pt-5"
           ></Image>
-          <p>Created lists will appear here</p>
+          <p className="m-auto w-full text-center text-lg">
+            created lists will appear here
+          </p>
         </>
       ) : (
         <ul>
@@ -45,7 +49,7 @@ export default function ViewAllLists() {
                     {list.name}
                   </p>
                 </Link>
-                <p className="p-3">0/2</p>
+                <CheckedItemCount listID={list.id}></CheckedItemCount>
                 <Image
                   width={16}
                   height={16}
@@ -54,7 +58,7 @@ export default function ViewAllLists() {
                   className="mr-3"
                 ></Image>
               </div>
-              {/*  progressbar comes here */}
+              {/* // TODO: progressbar comes here */}
               <ProgressBar></ProgressBar>
             </li>
           ))}

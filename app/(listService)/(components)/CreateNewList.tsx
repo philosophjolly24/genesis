@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import Modal from "../../(components)/Modal";
-import { handleCreateNewList } from "..";
+import listAPI from "../api";
 
 interface CreateNewListProp {
   isModalVisible: boolean;
@@ -27,7 +27,7 @@ export default function CreateNewList({
           type="text"
           name=""
           id=""
-          className="w-[90%] h-8 bg-grey rounded-[4px] mb-2 focus:outline-brand text-center text-lg"
+          className="w-[90%] h-8 rounded-[4px] mb-2 focus:outline-brand text-center text-lg border border-grey-2"
           onChange={(e) => {
             setListName(e.target.value);
           }}
@@ -42,7 +42,7 @@ export default function CreateNewList({
         <div className="w-[90%] flex gap-8 items-center justify-center mt-5 mb-4">
           <button
             className="bg-brand font-bold text-background-white text-xl w-34 h-10 rounded-sm tracking-wider"
-            onClick={() => {  
+            onClick={() => {
               setIsEmpty(false);
               setIsModalVisible(false);
               setListName("");
@@ -53,7 +53,7 @@ export default function CreateNewList({
           <button
             className="bg-brand font-bold text-background-white text-xl w-34 h-10 rounded-sm tracking-wider"
             onClick={() =>
-              handleCreateNewList({
+              listAPI.handleCreateNewList({
                 listName,
                 setIsVisible: setIsModalVisible,
                 setIsEmpty,
