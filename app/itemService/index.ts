@@ -1,7 +1,7 @@
 import { v7 as uuidv7 } from "uuid";
-import { databaseAPI, List } from "../(database)/api/api";
+import { databaseAPI, List } from "../database/api/api";
 import { Dispatch, SetStateAction } from "react";
-import { Item } from "../(database)/api/api";
+import { Item } from "../database/api/api";
 
 const handleAddItemToList = (
   item: Item,
@@ -24,6 +24,12 @@ const handleAddItemToList = (
   }
 };
 
-// item count for the checked items progress bar
+// handle item checked event
 
-export { handleAddItemToList };
+const handleItemChecked = async (itemID: string, checkedState: boolean) => {
+  await databaseAPI.updateItem(itemID, {
+    checked: checkedState,
+  });
+};
+
+export { handleAddItemToList, handleItemChecked };

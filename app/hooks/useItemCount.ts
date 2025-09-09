@@ -1,5 +1,5 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { databaseAPI } from "../(database)/api/api";
+import { databaseAPI } from "../database/api/api";
 
 export default function useItemCount(listID: string) {
   const items = useLiveQuery(async () => {

@@ -3,7 +3,7 @@
 // Imports
 import { RefObject, useState } from "react";
 import { Popover } from "react-tiny-popover";
-import { databaseAPI } from "../(database)/api/api";
+import { databaseAPI } from "../database/api/api";
 import ListIconEmojiPicker from "./ListIconEmojiPicker";
 
 // Interfaces

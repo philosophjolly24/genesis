@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import listAPI from "./(listService)/api";
+import listAPI from "./listService/api";
 import { useState } from "react";
-import Button from "./(components)/Button";
+import Button from "./components/Button";
 
 export default function Home() {
   const ViewAllLists = listAPI.ViewAllLists;
@@ -31,6 +31,3 @@ export default function Home() {
   );
 }
 
-// // TODO: navbar
-// TODO: progress bar
-// TODO: category dropdown box

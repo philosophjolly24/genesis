@@ -1,13 +1,13 @@
 "use client";
 // Imports
 import Image from "next/image";
-import { databaseAPI } from "../../(database)/api/api";
+import { databaseAPI } from "../../database/api/api";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useRef, useState } from "react";
-import ListIconPicker from "../../(components)/ListIcon";
+import ListIconPicker from "../../components/ListIcon";
 import Link from "next/link";
-import ProgressBar from "../../(components)/ProgressBar";
-import CheckedItemCount from "../../(components)/CheckedItemCount";
+import ProgressBar from "../../components/ProgressBar";
+import CheckedItemCount from "../../components/CheckedItemCount";
 
 export default function ViewAllLists() {
   const lists = useLiveQuery(() => databaseAPI.getAllLists()) || [];
@@ -59,7 +59,7 @@ export default function ViewAllLists() {
                 ></Image>
               </div>
               {/* // TODO: progressbar comes here */}
-              <ProgressBar></ProgressBar>
+              <ProgressBar listID={list.id}></ProgressBar>
             </li>
           ))}
         </ul>

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import Modal from "../../(components)/Modal";
+import Modal from "../../components/Modal";
 import listAPI from "../api";
 
 interface CreateNewListProp {

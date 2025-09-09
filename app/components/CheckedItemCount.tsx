@@ -1,15 +1,17 @@
-import useItemCount from "../(hooks)/useItemCount";
+import useCheckedItemCount from "../hooks/useCheckedItemCount";
+import useItemCount from "../hooks/useItemCount";
 
 interface CheckedItemCountProps {
   listID: string;
 }
 export default function CheckedItemCount({ listID }: CheckedItemCountProps) {
   const itemCount = useItemCount(listID)?.length;
+  const checkedItemCount = useCheckedItemCount(listID)?.length;
 
   return (
     <>
       <p>
-        {2}/{itemCount}
+        {checkedItemCount}/{itemCount}
       </p>
     </>
   );

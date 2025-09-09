@@ -4,20 +4,19 @@
 
 // Imports
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { databaseAPI } from "../(database)/api/api";
-import Button from "../(components)/Button";
-import Modal from "../(components)/Modal";
+import { databaseAPI } from "../database/api/api";
+import Button from "../components/Button";
+import Modal from "../components/Modal";
 import { useLiveQuery } from "dexie-react-hooks";
 import { v7 as uuidv7 } from "uuid";
-import { handleAddItemToList } from "../(itemService)";
-import listAPI from "../(listService)/api";
-import { List } from "../(database)/api/api";
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOption,
-  ListboxOptions,
-} from "@headlessui/react";
+import { handleAddItemToList } from "../itemService";
+import listAPI from "../listService/api";
+import { List } from "../database/api/api";
+import { ListboxOption } from "@headlessui/react";
+import DropDown from "../components/Dropdown";
+import { formatCurrency } from "../settings";
+import ItemCard from "../itemService/components/ItemCard";
+import ProgressBar from "../components/ProgressBar";
 
 // Interfaces
 
@@ -36,11 +35,11 @@ const categories = [
   { id: 6, name: "Seafood" },
   { id: 7, name: "Beverages" },
   { id: 8, name: "Hot drinks" },
-  { id: 9, name: "Fruits & Veg" },
+  { id: 9, name: "Fruits and Veg" },
   { id: 10, name: "Meat" },
   { id: 11, name: "Personal hygiene" },
-  { id: 12, name: "snacks & treats" },
-  { id: 13, name: "others" },
+  { id: 12, name: "Snacks and treats" },
+  { id: 13, name: "Others" },
 ];
 
 // Main Component
@@ -66,7 +65,6 @@ export default function Home({
 
   // * if null then the items are still loading
   if (!items) return null;
-  console.log(items);
 
   // * if list is found/loaded
   if (list !== null)
@@ -77,18 +75,23 @@ export default function Home({
           setIsModalVisible={setIsModalVisible}
           listID={listID}
         />
+        {/* progress bar */}
+        <div className="mb-4">
+          <ProgressBar listID={list.id}></ProgressBar>
+        </div>
 
-        <h1 className="font-open-sans text-3xl font-[550] m-auto text-center pt-10 pb-10 m-a text-black-1 truncate pl-4 pr-4">
+        <h1 className="font-open-sans text-3xl font-[550] m-auto text-center pb-10 m-a text-black-1 truncate pl-4 pr-4">
           {list.name}
         </h1>
+
         <ul>
           {items?.map((item) => {
             return (
-              <li key={item.id}>
-                <p>{item.name}</p>
-
-                <p>{item.quantity}</p>
-                <p>{item.price}</p>
+              <li
+                key={item.id}
+                className="w-full border-t border-b border-grey-2 mb-6 "
+              >
+                <ItemCard item={item}></ItemCard>
               </li>
             );
           })}
@@ -123,9 +126,9 @@ function AddItemToList({
   const [unit, setUnit] = useState("");
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState<{
-    value: string;
-    label: string;
-  } | null>(null);
+    id: number;
+    name: string;
+  }>(categories[0]);
   const [notes, setNotes] = useState("");
   const [isEmpty, setIsEmpty] = useState<boolean | null>(null);
 
@@ -138,6 +141,7 @@ function AddItemToList({
     price,
     category,
     notes,
+    checked: false,
   };
 
   return (
@@ -215,19 +219,30 @@ function AddItemToList({
             Total
           </label>
           <label className="text-center w-full h-full  m-auto mr-2 text-grey-3 mb-3 text-lg">
-            {/* // TODO: add some locale currency from the settings */}
-            {(price * quantity).toFixed(2)}
+            {formatCurrency(+(price * quantity).toFixed(2))}
+            {/* currency formatting */}
           </label>
         </div>
       </div>
       {/*// NOTE: continue from here( already installed react-select :https://react-select.com/home#getting-started`) */}
-
       {/* category input */}
       <label className="  text-lg mb-1">Category</label>
-
       {/* dropdown */}
-      <CategoriesListbox></CategoriesListbox>
-
+      <DropDown
+        options={categories}
+        setSelectedCategory={setCategory}
+        selectedCategory={category}
+      >
+        {categories.map((category) => (
+          <ListboxOption
+            key={category.id}
+            value={category}
+            className="data-focus:bg-brand data-focus:text-white text-center"
+          >
+            {category.name}
+          </ListboxOption>
+        ))}
+      </DropDown>
       {/* notes input */}
       <label className=" max-w-[90%] w-full text-lg mb-1">Notes</label>
       <textarea
@@ -246,7 +261,7 @@ function AddItemToList({
           setQuantity(0);
           setUnit("");
           setPrice(0);
-          setCategory(null);
+          setCategory(categories[0]);
           setNotes("");
         }}
         text="Add Item to list"
@@ -256,29 +271,9 @@ function AddItemToList({
   );
 }
 
-function CategoriesListbox() {
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  return (
-    <Listbox value={selectedCategory} onChange={setSelectedCategory}>
-      <ListboxButton
-        className={`border bg-background-white w-[90%] border-grey-2 rounded-md h-8`}
-      >
-        {selectedCategory.name}
-      </ListboxButton>
-      <ListboxOptions
-        anchor="bottom"
-        className="z-20 bg-background-white w-[75%] shadow-list border border-grey-2 "
-      >
-        {categories.map((person) => (
-          <ListboxOption
-            key={person.id}
-            value={person}
-            className="data-focus:bg-brand data-focus:text-white text-center"
-          >
-            {person.name}
-          </ListboxOption>
-        ))}
-      </ListboxOptions>
-    </Listbox>
-  );
-}
+// TODO: ADD CHECKED OUT STYLING
+// TODO: search
+// TODO:  open item edit popup
+// TODO: more options popup
+// TODO: completed,remaining and total bottom bar
+// TODO: fixed button at the bottom of page for when items need to be scrolled through

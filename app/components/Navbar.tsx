@@ -19,7 +19,7 @@ export default function Navbar() {
           height={36}
           src={isNavOpen ? "close-1.svg" : "hamburger-2.svg"}
           alt="hamburger-menu"
-          className={`w-9 ml-3 `}
+          className={`w-9 ml-3 absolute inset-0 mt-3 `}
         ></Image>
       </div>
       <div
@@ -28,6 +28,9 @@ export default function Navbar() {
             ? " bg-black-1/30 translate-y-0 h-screen w-screen"
             : "-translate-y-full"
         }`}
+        onClick={() => {
+          setIsNavOpen(!isNavOpen);
+        }}
       >
         <div
           className={`  rounded-b-lg  transform transition-transform duration-500 ${

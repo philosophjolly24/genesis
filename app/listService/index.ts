@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import { databaseAPI } from "../(database)/api/api";
+import { databaseAPI } from "../database/api/api";
 import { v7 as uuidv7 } from "uuid";
-import { List } from "../(database)/api/api";
+import { List } from "../database/api/api";
 
 interface handleCreateNewListParams {
   listName: string;

@@ -1,19 +1,18 @@
 import Dexie, { type EntityTable } from "dexie";
 
-interface Category {
-  id: string;
-  name: string;
-}
 interface Item {
   id: string;
   list_id: string; // foreign key
-  category_id?: number; // foreign key
   price?: number;
   unit?: string;
   quantity?: number;
   name: string;
   notes?: string;
-  checked?: boolean;
+  checked: boolean;
+  category?: {
+    id: number;
+    name: string;
+  };
 }
 interface List {
   id: string;
@@ -24,10 +23,6 @@ interface List {
 }
 
 const db = new Dexie("GenesisDB") as Dexie & {
-  categories: EntityTable<
-    Category,
-    "id" // primary key "id"
-  >;
   lists: EntityTable<
     List,
     "id" // primary key "id"
@@ -45,5 +40,5 @@ db.version(1).stores({
   items: "id,list_id,category_id,quantity,name,notes",
 });
 
-export type { Category, List, Item };
+export type { List, Item };
 export { db };

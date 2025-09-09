@@ -5,7 +5,7 @@
 // Imports
 import { EmojiPicker } from "frimousse";
 import { Dispatch, SetStateAction } from "react";
-import { databaseAPI } from "../(database)/api/api";
+import { databaseAPI } from "../database/api/api";
 
 // Interfaces
 interface ListIconEmojiPickerProps {
