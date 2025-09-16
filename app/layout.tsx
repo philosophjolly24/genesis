@@ -16,9 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`w-svw h-svh m-0`}>
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex items-center justify-between mb-10 sticky inset-0 z-50 bg-background-white ">
           <Navbar></Navbar>
-          <Link href={"/"} className="grow">
+          <Link href={"/"} className="m-auto">
             <h1 className="font-open-sans text-[38px] font-extrabold text-brand text-center block w-fit m-auto  ">
               Genesis
             </h1>

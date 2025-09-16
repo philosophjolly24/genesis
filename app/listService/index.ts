@@ -36,6 +36,10 @@ const handleCreateNewList = async ({
   setIsVisible(false);
 };
 
+const handleListDelete = async (listID: string) => {
+  await databaseAPI.deleteList(listID);
+};
+
 // INFO: asyncSetListId: set the current list id to retrieve the list items
 async function asyncSetListId(
   setListID: Dispatch<SetStateAction<string>>,
@@ -47,4 +51,13 @@ async function asyncSetListId(
   setList((await databaseAPI.getList(listID)) ?? null);
 }
 
-export { handleCreateNewList, asyncSetListId };
+async function handleListRename(updatedName: string, listID: string) {
+  await databaseAPI.updateList(listID, { name: updatedName });
+}
+
+export {
+  handleCreateNewList,
+  asyncSetListId,
+  handleListDelete,
+  handleListRename,
+};

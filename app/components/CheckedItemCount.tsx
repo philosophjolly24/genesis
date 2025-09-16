@@ -5,12 +5,12 @@ interface CheckedItemCountProps {
   listID: string;
 }
 export default function CheckedItemCount({ listID }: CheckedItemCountProps) {
-  const itemCount = useItemCount(listID)?.length;
-  const checkedItemCount = useCheckedItemCount(listID)?.length;
+  const itemCount = useItemCount(listID);
+  const checkedItemCount = useCheckedItemCount(listID);
 
   return (
     <>
-      <p>
+      <p className="text-xl text-grey-3">
         {checkedItemCount}/{itemCount}
       </p>
     </>

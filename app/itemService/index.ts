@@ -3,7 +3,7 @@ import { databaseAPI, List } from "../database/api/api";
 import { Dispatch, SetStateAction } from "react";
 import { Item } from "../database/api/api";
 
-const handleAddItemToList = (
+const handleAddItemToList = async (
   item: Item,
   setIsEmpty: Dispatch<SetStateAction<boolean | null>>
 ) => {
@@ -18,7 +18,7 @@ const handleAddItemToList = (
     }
 
     // add item to table
-    databaseAPI.addItem(item);
+    await databaseAPI.addItem(item);
   } catch (err) {
     console.error(err);
   }
@@ -32,4 +32,22 @@ const handleItemChecked = async (itemID: string, checkedState: boolean) => {
   });
 };
 
-export { handleAddItemToList, handleItemChecked };
+const getListTotalPrice = (items: Item[]) =>
+  items?.reduce((acc, curr) => {
+    if (curr.price !== undefined) {
+      if (curr.quantity !== undefined) return acc + curr.price * curr.quantity;
+    }
+    return acc;
+  }, 0) ?? 0;
+
+const handleItemUpdate = async (itemID: string, item: Item) => {
+  await databaseAPI.updateItem(itemID, item);
+  return console.log("item " + itemID + " has been updated");
+};
+
+export {
+  handleAddItemToList,
+  handleItemChecked,
+  getListTotalPrice,
+  handleItemUpdate,
+};

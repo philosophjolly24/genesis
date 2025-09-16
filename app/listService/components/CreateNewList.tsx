@@ -20,14 +20,14 @@ export default function CreateNewList({
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
       >
-        <label className="block mt-5 mb-4 font-open-sans text-2xl text-black-1 ">
+        <label className="block mt-5 mb-4 font-open-sans text-[26px] text-black-1 font-semiboldbold  ">
           Enter your lists name:
         </label>
         <input
           type="text"
           name=""
           id=""
-          className="w-[90%] h-8 rounded-[4px] mb-2 focus:outline-brand text-center text-lg border border-grey-2"
+          className="w-[90%] h-13 rounded-md mb-2 focus:outline-brand text-center  border border-grey-2 text-2xl"
           onChange={(e) => {
             setListName(e.target.value);
           }}
@@ -41,7 +41,7 @@ export default function CreateNewList({
         ) : null}
         <div className="w-[90%] flex gap-8 items-center justify-center mt-5 mb-4">
           <button
-            className="bg-brand font-bold text-background-white text-xl w-34 h-10 rounded-sm tracking-wider"
+            className="bg-brand text-white text-2xl w-38 rounded-md h-13 font-semibold tracking-wide"
             onClick={() => {
               setIsEmpty(false);
               setIsModalVisible(false);
@@ -51,7 +51,7 @@ export default function CreateNewList({
             cancel
           </button>
           <button
-            className="bg-brand font-bold text-background-white text-xl w-34 h-10 rounded-sm tracking-wider"
+            className="bg-brand text-white text-2xl w-38 rounded-md h-13 font-semibold tracking-wide"
             onClick={() =>
               listAPI.handleCreateNewList({
                 listName,

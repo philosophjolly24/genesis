@@ -23,7 +23,13 @@ const databaseAPI = {
 
   // Update a specific list
   updateList: async (listId: string, updatedList: Partial<List>) => {
-    return await db.lists.update(listId, updatedList);
+    const updated = await db.lists.update(listId, updatedList);
+    if (updated) console.log(`The item was updated successfully`);
+    else
+      console.log(
+        `Nothing was updated - there was no list with the id: ${listId}`
+      );
+    return updated;
   },
   // ================================================ //
 
@@ -48,12 +54,13 @@ const databaseAPI = {
     // return the query to that you can use it in useLiveQuery
     return db.items.where("list_id").equals(listId).toArray();
   },
+
   getAllCheckedListItems: (listId: string) => {
     // return the query to that you can use it in useLiveQuery
     return db.items
       .where("list_id")
       .equals(listId)
-      .and((item) => item.checked == true)
+      .and((item) => item.checked === true)
       .toArray();
   },
 

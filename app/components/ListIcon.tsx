@@ -1,24 +1,18 @@
 // * Emoji Icon Picker Component
 
 // Imports
-import { RefObject, useState } from "react";
+import { useState } from "react";
 import { Popover } from "react-tiny-popover";
-import { databaseAPI } from "../database/api/api";
 import ListIconEmojiPicker from "./ListIconEmojiPicker";
 
 // Interfaces
 interface ListIconProps {
   list_id: string;
   ListEmojiIcon: string;
-  ref: RefObject<null>;
 }
 
 // Main component
-export default function ListIcon({
-  list_id,
-  ListEmojiIcon,
-  ref,
-}: ListIconProps) {
+export default function ListIcon({ list_id, ListEmojiIcon }: ListIconProps) {
   const [isPickerVisible, setIsPickerVisible] = useState(false);
 
   return (
@@ -31,7 +25,6 @@ export default function ListIcon({
         isOpen={isPickerVisible}
         positions={["bottom", "right"]} // preferred positions by priority
         onClickOutside={() => setIsPickerVisible(!isPickerVisible)}
-        ref={ref}
         content={
           <div>
             {/* *emoji picker */}
@@ -45,9 +38,9 @@ export default function ListIcon({
         containerClassName="z-100"
       >
         {/* Where emoji is being displayed */}
-        <div className="w-8 h-8 bg-grey ml-3 rounded-sm text-center ">
+        <div className=" flex items-center justify-center w-14 h-14 bg-grey ml-3 rounded-sm text-center ">
           <p
-            className="w-8 h-8 bg-grey  rounded-sm text-center text-2xl "
+            className="w-auto h-auto  m-auto rounded-sm text-center text-2xl "
             onClick={(e) => {
               e.stopPropagation();
               setIsPickerVisible(!isPickerVisible);

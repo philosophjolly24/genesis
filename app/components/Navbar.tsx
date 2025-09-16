@@ -9,21 +9,22 @@ export default function Navbar() {
   return (
     <>
       <div
-        className=" flex gap-1 z-10 flex-col"
+        className=" fixed flex gap-1 z-50 flex-col top-3 left-3"
         onClick={() => {
           setIsNavOpen(!isNavOpen);
         }}
       >
         <Image
-          width={36}
-          height={36}
+          width={38}
+          height={38}
           src={isNavOpen ? "close-1.svg" : "hamburger-2.svg"}
           alt="hamburger-menu"
-          className={`w-9 ml-3 absolute inset-0 mt-3 `}
+          className={`w-11 ml-3 fixed inset-0 mt-3`}
         ></Image>
       </div>
+
       <div
-        className={`absolute inset-0  ${
+        className={`fixed inset-0 z-40 ${
           isNavOpen
             ? " bg-black-1/30 translate-y-0 h-screen w-screen"
             : "-translate-y-full"
@@ -33,14 +34,14 @@ export default function Navbar() {
         }}
       >
         <div
-          className={`  rounded-b-lg  transform transition-transform duration-500 ${
+          className={`fixed rounded-b-lg  transform transition-transform duration-500  z-40 ${
             isNavOpen
-              ? " bg-background-white w-full h-[25%] translate-y-0 "
+              ? " bg-background-white w-full h-[31%] translate-y-0 "
               : "-translate-y-full"
           }`}
         >
           <ul
-            className="p-4 space-y-2 mb-3  flex flex-col gap-5  w-60 m-auto"
+            className="p-4 space-y-2 mb-3 flex flex-col gap-5 w-60 m-auto h-full font-[400]"
             onClick={() => {
               setIsNavOpen(!isNavOpen);
             }}
@@ -49,10 +50,14 @@ export default function Navbar() {
               href={"/"}
               className="flex items-center justify-between flex-row mt-9 gap-2 m-auto w-full"
             >
-              <li className=" flex  gap-4 text-black-1  text-xl grow m-auto items-center justify-center ">
+              <li
+                className={` flex  gap-6 text-black-1  text-2xl grow m-auto items-center justify-center ${
+                  isNavOpen ? "" : "hidden"
+                }`}
+              >
                 <Image
-                  width={24}
-                  height={24}
+                  width={32}
+                  height={32}
                   src={"home.svg"}
                   alt="home"
                 ></Image>
@@ -61,12 +66,16 @@ export default function Navbar() {
             </Link>
             <Link
               href={"/settings"}
-              className="flex items-center justify-between flex-row  gap-2 m-auto w-full"
+              className="flex items-center justify-between flex-row gap-2 m-auto w-full"
             >
-              <li className=" flex  gap-4 text-black-1  text-xl grow m-auto items-center justify-center">
+              <li
+                className={` flex  gap-6 text-black-1  text-2xl grow m-auto items-center justify-center ${
+                  isNavOpen ? "" : "hidden"
+                }`}
+              >
                 <Image
-                  width={24}
-                  height={24}
+                  width={32}
+                  height={32}
                   src={"settings.svg"}
                   alt="settings"
                 ></Image>
@@ -77,14 +86,22 @@ export default function Navbar() {
               href={"/trash"}
               className="flex items-center justify-between flex-row  gap-2 m-auto w-full"
             >
-              <li className=" flex  gap-4 text-black-1  text-xl grow m-auto items-center justify-center">
+              <li
+                className={` flex  gap-6 text-black-1  text-2xl grow m-auto items-center justify-center ${
+                  isNavOpen ? "" : "hidden"
+                }`}
+              >
                 <Image
-                  width={24}
-                  height={24}
+                  width={32}
+                  height={32}
                   src={"trash.svg"}
                   alt="trash"
                 ></Image>
-                <p className="block grow max-w-20">trash</p>
+                <p
+                  className={`block grow max-w-20 ${isNavOpen ? "" : "hidden"}`}
+                >
+                  trash
+                </p>
               </li>
             </Link>
           </ul>
