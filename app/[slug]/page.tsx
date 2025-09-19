@@ -27,6 +27,8 @@ import { ItemContext } from "../context/appContext";
 import { categories } from "../util/categories";
 import { handleAddItemToList } from "../itemService";
 import { clearListFields } from "../util/clearFields";
+import ContextMenu from "../components/ContextMenu";
+import Image from "next/image";
 
 // * Interfaces
 interface AddItemToListProps {
@@ -76,25 +78,37 @@ export default function Home() {
         {/* 
         // #:-------------------  Feature: Progress bar  ------------------- //
       */}
-
         <div className="mb-4">
           <ProgressBar
             listID={listID !== undefined ? listID : ""}
           ></ProgressBar>
         </div>
-
         {/* 
-        // #:-------------------  Feature:  List Heading  ------------------- //
+        // #:-------------------  Feature:  List heading bar  ------------------- //
       */}
-
-        <h1 className="font-open-sans text-3xl font-[550] m-auto text-center pb-10 m-a text-black-1 truncate pl-4 pr-4">
-          {list.name}
-        </h1>
-
+        <div className="flex items-center justify-center pb-10 gap-4">
+          <h1 className="font-open-sans text-3xl font-[550] m-auto text-center  m-a text-black-1 truncate pl-4 pr-4">
+            {list.name}
+          </h1>{" "}
+          <Image width={24} height={24} src={"search.svg"} alt="search"></Image>
+          <ContextMenu
+            content={({ close }) =>
+              ListOptions({
+                close,
+              })
+            }
+          >
+            <Image
+              width={24}
+              height={24}
+              src={"more-options-vertical.svg"}
+              alt="more-options-vertical"
+            ></Image>
+          </ContextMenu>
+        </div>
         {/* 
         // #:-------------------  Feature: List items  ------------------- //
       */}
-
         <ul className={`pb-30 ${isModalVisible ? "overflow-hidden" : ""}`}>
           {items?.map((item) => {
             return (
@@ -122,7 +136,6 @@ export default function Home() {
           listTotal={listTotal}
           listID={listID !== undefined ? listID : ""}
         ></ListSummary>
-
         {/*
           // * if there are no lists  
         */}
@@ -394,6 +407,70 @@ function ItemModal({
   );
 }
 
+function ListOptions({ close }: { close?: () => void }) {
+  return (
+    <>
+      <div className="z-10 bg-background-white h-auto w-50 flex flex-col  rounded-md border-2 border-grey  mr-2">
+        <div
+          className=" flex border-b border-grey-2 h-15 text-lg align-center items-center gap-4"
+          onClick={(e) => {
+            close?.();
+          }}
+        >
+          <Image
+            width={32}
+            height={32}
+            src={"share.svg"}
+            alt="share"
+            className="ml-2"
+          ></Image>{" "}
+          <p className="grow  text-left"> download list</p>
+        </div>
+
+        <div
+          className=" flex border-b border-grey-2 h-15 text-lg align-center items-center gap-4"
+          onClick={(e) => {
+            close?.();
+          }}
+        >
+          <Image
+            width={32}
+            height={32}
+            src={"sort.svg"}
+            alt="sort"
+            className="ml-2 "
+          ></Image>{" "}
+          <p className="grow  text-left"> sort by:</p>
+        </div>
+        <div
+          className=" flex border-b border-grey-2 h-15 text-lg align-center items-center gap-4"
+          onClick={(e) => {
+            close?.();
+          }}
+        >
+          <Image
+            width={24}
+            height={24}
+            src={"uncheck.svg"}
+            alt="uncheck"
+            className="ml-2"
+          ></Image>{" "}
+          <p className="grow  text-left p2"> uncheck all items</p>
+        </div>
+        <button
+          className="border-b border-grey-2  h-15 text-lg text-error-1 gap-3 font-semibold"
+          onClick={(e) => {
+            close?.();
+          }}
+        >
+          delete checked items
+        </button>
+      </div>
+    </>
+  );
+}
+
 // ! FIX: update the list updated_at field in the database on every item change
+// ! FIX: context menu padding(maybe?)
 // TODO: search
 // TODO: more options popup
