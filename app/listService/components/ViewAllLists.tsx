@@ -94,25 +94,17 @@ export default function ViewAllLists() {
                 // #:-------------------  Feature: Context menu  ------------------- //
                  */}
                 <ContextMenu
-                  isMenuVisible={list.id === CurrentListId}
-                  setIsMenuVisible={() => {
-                    setModalID(CurrentListId);
-                    setCurrentListId("");
-                    setCurrentListName(list.name);
-                  }}
-                  content={
-                    list.id === CurrentListId
-                      ? ListContextMenu({
-                          isDeleteModalVisible,
-                          setIsDeleteModalVisible,
-                          setModalID,
-                          currentList: CurrentListId,
-                          setIsRenameModalVisible,
-                          isRenameModalVisible,
-                        })
-                      : null
+                  content={({ close }) =>
+                    ListContextMenu({
+                      isDeleteModalVisible,
+                      setIsDeleteModalVisible,
+                      setModalID,
+                      currentList: CurrentListId,
+                      setIsRenameModalVisible,
+                      isRenameModalVisible,
+                      close,
+                    })
                   }
-                  listId={CurrentListId}
                 >
                   {/* 
                   // #:-------------------  Feature: More options menu  ------------------- //
@@ -123,11 +115,8 @@ export default function ViewAllLists() {
                     alt="more-options"
                     src={"more-options-horizontal.svg"}
                     className="mr-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCurrentListId(
-                        CurrentListId === list.id ? "" : list.id
-                      );
+                    onClick={() => {
+                      setCurrentListId(list.id);
                       setCurrentListName(list.name);
                     }}
                   ></Image>
@@ -154,6 +143,7 @@ interface ListContextMenuProps {
   setIsRenameModalVisible: Dispatch<SetStateAction<boolean>>;
   setModalID: Dispatch<SetStateAction<string>>;
   currentList: string;
+  close?: () => void;
 }
 
 function ListContextMenu({
@@ -163,6 +153,7 @@ function ListContextMenu({
   setIsRenameModalVisible,
   currentList,
   isRenameModalVisible,
+  close,
 }: ListContextMenuProps) {
   return (
     <>
@@ -173,6 +164,7 @@ function ListContextMenu({
             if (e.currentTarget.innerText == "Rename list")
               setIsRenameModalVisible(!isRenameModalVisible);
             setModalID(currentList);
+            close?.();
           }}
         >
           Rename list
@@ -187,6 +179,7 @@ function ListContextMenu({
             if (e.currentTarget.innerText == "Delete list")
               setIsDeleteModalVisible(!isDeleteModalVisible);
             setModalID(currentList);
+            close?.();
           }}
         >
           Delete list

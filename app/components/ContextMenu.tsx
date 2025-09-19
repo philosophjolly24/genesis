@@ -1,38 +1,22 @@
-import {
-  Dispatch,
-  JSX,
-  ReactNode,
-  RefObject,
-  SetStateAction,
-  useState,
-} from "react";
-import { Popover } from "react-tiny-popover";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import { ReactNode } from "react";
 
 interface ContextMenuProps {
-  isMenuVisible: boolean;
-  setIsMenuVisible: Dispatch<SetStateAction<boolean>>;
   children: ReactNode;
-  content?: any; //   eslint-disable-line @typescript-eslint/no-explicit-any
-  listId: string;
+  content: (props: { close: () => void }) => ReactNode; //   eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
-export default function ContextMenu({
-  children,
-  isMenuVisible,
-  setIsMenuVisible,
-  content,
-  listId: string,
-}: ContextMenuProps) {
+export default function ContextMenu({ children, content }: ContextMenuProps) {
   return (
-    <Popover
-      isOpen={isMenuVisible}
-      positions={["top", "bottom"]} // preferred positions by priority
-      onClickOutside={() => setIsMenuVisible(!isMenuVisible)}
-      content={content}
-      containerClassName="z-10"
-    >
-      {/* the visible component will be here */}
-      {children}
+    <Popover className="relative">
+      {({ close }) => (
+        <>
+          <PopoverButton>{children}</PopoverButton>
+          <PopoverPanel anchor="top" className="flex flex-col">
+            {content({ close })}
+          </PopoverPanel>
+        </>
+      )}
     </Popover>
   );
 }

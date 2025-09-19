@@ -28,7 +28,7 @@ export default function Modal({
       className="bg-black-4/70 inset-0 fixed flex items-center justify-center z-20"
       onClick={(e) => {
         e.stopPropagation();
-        setIsModalVisible(false);
+        setIsModalVisible(!isModalVisible);
         if (setCurrentItem) setCurrentItem(null);
         if (onClear) onClear();
       }}
