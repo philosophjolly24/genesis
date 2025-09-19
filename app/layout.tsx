@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
+import { ItemProvider } from "./context/appContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,17 +17,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`w-svw h-svh m-0`}>
-        <div className="flex items-center justify-between mb-10 sticky inset-0 z-50 bg-background-white ">
-          <Navbar></Navbar>
-          <Link href={"/"} className="m-auto">
-            <h1 className="font-open-sans text-[38px] font-extrabold text-brand text-center block w-fit m-auto  ">
-              Genesis
-            </h1>
-          </Link>
-        </div>
-        <main className="w-full max-w-[1200px] m-auto pl-3 pr-3">
-          {children}
-        </main>
+        <ItemProvider>
+          <div className="flex items-center justify-between mb-10 sticky inset-0 z-20 bg-background-white ">
+            <Navbar></Navbar>
+            <Link href={"/"} className="m-auto">
+              <h1 className="font-open-sans text-[38px] font-extrabold text-brand text-center block w-fit m-auto  ">
+                Genesis
+              </h1>
+            </Link>
+          </div>
+          <main className="w-full max-w-[1200px] m-auto pl-3 pr-3">
+            {children}
+          </main>
+        </ItemProvider>
       </body>
     </html>
   );

@@ -25,7 +25,7 @@ export default function Modal({
 }: ModalProps) {
   return isModalVisible ? (
     <div
-      className="bg-black-4/70 inset-0 fixed flex items-center justify-center z-2000000"
+      className="bg-black-4/70 inset-0 fixed flex items-center justify-center z-20"
       onClick={(e) => {
         e.stopPropagation();
         setIsModalVisible(false);
@@ -34,7 +34,7 @@ export default function Modal({
       }}
     >
       <div
-        className={`w-[90%] h-${height} bg-background-white m-auto  rounded-sm flex flex-col items-center z-2000000`}
+        className={`w-[90%] h-${height} bg-background-white m-auto  rounded-sm flex flex-col items-center `}
         onClick={(e) => {
           e.stopPropagation();
         }}

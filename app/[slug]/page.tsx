@@ -1,28 +1,34 @@
-// INFO: Lists page
+//  TITLE: User's list page
 
 "use client";
 
-// Imports
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { databaseAPI, Item } from "../database/api/api";
+// * Imports
+import {
+  Dispatch,
+  SetStateAction,
+  use,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import { Item } from "../database/api/api";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
-import { useLiveQuery } from "dexie-react-hooks";
 import { v7 as uuidv7 } from "uuid";
-import { handleAddItemToList } from "../itemService";
-import listAPI from "../listService/api";
-import { List } from "../database/api/api";
 import { ListboxOption } from "@headlessui/react";
 import DropDown from "../components/Dropdown";
 import { formatCurrency } from "../settings";
 import ItemCard from "../itemService/components/ItemCard";
 import ProgressBar from "../components/ProgressBar";
 import ListSummary from "../itemService/components/ListSummary";
-import useCheckedItemCount from "../hooks/useCheckedItemCount";
 import { itemAPI } from "../itemService/api";
+import { ItemContext } from "../context/appContext";
+import { categories } from "../util/categories";
+import { handleAddItemToList } from "../itemService";
+import { clearListFields } from "../util/clearFields";
 
-// Interfaces
-
+// * Interfaces
 interface AddItemToListProps {
   isModalVisible: boolean;
   setIsModalVisible: Dispatch<SetStateAction<boolean>>;
@@ -31,46 +37,11 @@ interface AddItemToListProps {
   setCurrentItem: Dispatch<SetStateAction<Item | null>>;
 }
 
-// TODO: move to a util file
-const categories = [
-  { id: 1, name: "Grains" },
-  { id: 2, name: "Baked goods" },
-  { id: 3, name: "Alcohol" },
-  { id: 4, name: "Dairy" },
-  { id: 5, name: "Desserts" },
-  { id: 6, name: "Seafood" },
-  { id: 7, name: "Beverages" },
-  { id: 8, name: "Hot drinks" },
-  { id: 9, name: "Fruits and Veg" },
-  { id: 10, name: "Meat" },
-  { id: 11, name: "Personal hygiene" },
-  { id: 12, name: "Snacks and treats" },
-  { id: 13, name: "Others" },
-];
-
-// Main Component
-export default function Home({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const [list, setList] = useState<List | null>(null);
-  const [listID, setListID] = useState("");
+// NOTE: Home component
+export default function Home() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
-
-  // INFO: Page useEffect
-  useEffect(() => {
-    // set current list_id
-    listAPI.asyncSetListId(setListID, setList, params, listID);
-  }, [params, listID]);
-  // retrieve the list items on load
-
-  const items = useLiveQuery(() => {
-    return databaseAPI.getAllItemsForList(listID);
-  }, [listID]);
-
-  const itemsChecked = useCheckedItemCount(listID);
+  const { items, itemsChecked, list, listID } = use(ItemContext);
 
   // prevent scroll when modal is open
   useEffect(() => {
@@ -86,31 +57,43 @@ export default function Home({
     };
   }, [isModalVisible]);
 
-  // * if null then the items are still loading
-  if (!items) return null;
+  if (!items) return null; // * if null then the items are still loading
+  if (itemsChecked == undefined) return null; // * if null then there are no checked items
 
-  if (itemsChecked == undefined) return null;
   const listTotal = itemAPI.getListTotalPrice(items);
 
   // * if list is found/loaded
-  if (list !== null)
+  if (list !== null && list !== undefined)
     return (
       <>
         <ItemModal
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
-          listID={listID}
+          listID={listID !== undefined ? listID : ""}
           currentItem={currentItem}
           setCurrentItem={setCurrentItem}
         />
-        {/* progress bar */}
+        {/* 
+        // #:-------------------  Feature: Progress bar  ------------------- //
+      */}
+
         <div className="mb-4">
-          <ProgressBar listID={list.id}></ProgressBar>
+          <ProgressBar
+            listID={listID !== undefined ? listID : ""}
+          ></ProgressBar>
         </div>
+
+        {/* 
+        // #:-------------------  Feature:  List Heading  ------------------- //
+      */}
 
         <h1 className="font-open-sans text-3xl font-[550] m-auto text-center pb-10 m-a text-black-1 truncate pl-4 pr-4">
           {list.name}
         </h1>
+
+        {/* 
+        // #:-------------------  Feature: List items  ------------------- //
+      */}
 
         <ul className={`pb-30 ${isModalVisible ? "overflow-hidden" : ""}`}>
           {items?.map((item) => {
@@ -135,8 +118,14 @@ export default function Home({
           text={"add a new list"}
           style=" fixed bottom-20 left-0 right-0"
         ></Button>
-        <ListSummary listTotal={listTotal} listID={listID}></ListSummary>
+        <ListSummary
+          listTotal={listTotal}
+          listID={listID !== undefined ? listID : ""}
+        ></ListSummary>
 
+        {/*
+          // * if there are no lists  
+        */}
         {items.length == 0 ? (
           <p className="m-auto w-full text-center mt-50">
             {" "}
@@ -147,7 +136,7 @@ export default function Home({
     );
 }
 
-// INFO: Adding item to list modal window component
+// NOTE: Adding items to list
 
 function ItemModal({
   isModalVisible,
@@ -156,14 +145,14 @@ function ItemModal({
   currentItem,
   setCurrentItem,
 }: AddItemToListProps) {
-  // State declarations
+  //
+  // * States
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [unit, setUnit] = useState("");
   const [tempPrice, setTempPrice] = useState<string>("");
   const [tempQuantity, setTempQuantity] = useState<string>("");
   const [price, setPrice] = useState(0);
-  // const [total, setTotal] = useState(0);
   const [category, setCategory] = useState<{
     id: number;
     name: string;
@@ -171,6 +160,11 @@ function ItemModal({
   const [notes, setNotes] = useState("");
   const [isEmpty, setIsEmpty] = useState<boolean | null>(null);
 
+  // * Refs
+  const priceRef = useRef<HTMLInputElement>(null);
+  const qtyRef = useRef<HTMLInputElement>(null);
+
+  // NOTE: item object that will be used to add item
   const item = {
     id: uuidv7(),
     list_id: listID,
@@ -183,10 +177,7 @@ function ItemModal({
     checked: false,
   };
 
-  const priceRef = useRef<HTMLInputElement>(null);
-  const qtyRef = useRef<HTMLInputElement>(null);
-
-  // sets the states to the currents items fields
+  // * sets state to the currents items fields
   useEffect(() => {
     if (currentItem) {
       setName(currentItem.name);
@@ -197,14 +188,8 @@ function ItemModal({
       setTempPrice(currentItem.price?.toString() ?? "0");
       setCategory(currentItem.category ?? categories[0]);
       setNotes(currentItem.notes ?? "");
-      // setTotal((currentItem.price ?? 0) * (currentItem?.quantity ?? 0));
     }
   }, [currentItem]);
-
-  // calculates the total on list updates
-  useEffect(() => {
-    // setTotal(+(priceRef?.current?.value || 0) * +(qtyRef?.current?.value || 0));
-  }, []);
 
   return (
     <Modal
@@ -212,21 +197,28 @@ function ItemModal({
       isModalVisible={isModalVisible}
       setIsModalVisible={setIsModalVisible}
       setCurrentItem={setCurrentItem}
-      onClear={() => {
-        setName("");
-        setQuantity(0);
-        setUnit("");
-        setPrice(0);
-        setCategory(categories[0]);
-        setNotes("");
-        setTempPrice("");
-        setTempQuantity("");
-      }}
+      onClear={() =>
+        clearListFields({
+          setName,
+          setCategory,
+          setQuantity,
+          setUnit,
+          setPrice,
+          setNotes,
+          setTempPrice,
+          setTempQuantity,
+        })
+      }
     >
       <h1 className="font-open-sans text-3xl font-[550] m-auto text-center pt-10 pb-10 m-a text-black-1 truncate pl-4 pr-4 sticky max-w-[90%]">
+        {/*
+         // NOTE: (currentItem !== null ?) checks whether an item will be updated or whether a user wants to add a new item
+         */}
         {currentItem !== null ? currentItem.name : "Add Item to list"}
       </h1>
-      {/*name input */}
+      {/* 
+        // #:-------------------  Feature: Name  ------------------- //
+      */}
       <label className="max-w-[90%] w-full text-lg mb-1">Name</label>
       <input
         type="text"
@@ -239,6 +231,9 @@ function ItemModal({
           } else setIsEmpty(false);
         }}
       />
+      {/* 
+        // #:-------------------  Feature: name validation label  ------------------- //
+      */}
       {isEmpty ? (
         <>
           <p className="text-error-1 font-semibold"> name may not be empty</p>
@@ -246,7 +241,9 @@ function ItemModal({
       ) : null}
       <div className="max-w-[90%] flex items-center justify-between flex-row w-full gap-8">
         <div className="">
-          {/*quantity input */}
+          {/* 
+           // #:-------------------  Feature: Quantity ------------------- //
+          */}
           <label className="block text-lg mb-1">Qty</label>
           <input
             type="text"
@@ -256,16 +253,18 @@ function ItemModal({
             onChange={(e) => {
               const val = e.target.value;
 
-              // validate whether the value in the input is a number between 1-9
+              // *validate whether the value in the input is a number between 1-9
               if (/^[1-9]\d*$/.test(val)) {
                 setTempQuantity(val); // set input to the value
                 setQuantity(+val); // set the price to value
-              } else setTempQuantity(""); //else set the input to empty
+              } else setTempQuantity(""); // else set the input to empty
             }}
           />
         </div>
         <div>
-          {/* unit input */}
+          {/* 
+            // #:-------------------  Feature: Unit ------------------- //
+          */}
           <label className="block text-lg mb-1">Unit</label>
           <input
             type="text"
@@ -280,7 +279,9 @@ function ItemModal({
 
       <div className="max-w-[90%] flex items-center justify-between flex-row w-full gap-8">
         <div>
-          {/* price input */}
+          {/* 
+            // #:-------------------  Feature: Price ------------------- //
+          */}
           <label className="block text-lg mb-1">Price</label>
           <input
             type="text"
@@ -299,23 +300,28 @@ function ItemModal({
           />
         </div>
         <div className="flex items-center justify-center flex-col ">
-          {/* price total label */}
+          {/* 
+            // #:-------------------  Feature: price total ------------------- //
+          */}
           <label className="text-center w-full h-full  m-auto mr-2 mt-5  text-lg">
             Total
           </label>
           <label className="text-center w-full h-full  m-auto mr-2 text-grey-3 mb-3 text-lg">
-            {formatCurrency(+(price || 0) * +(quantity || 0))}
-
-            {/* currency formatting */}
+            {
+              formatCurrency(+(price || 0) * +(quantity || 0)) //* currency formatting based on locale
+            }
           </label>
         </div>
       </div>
       <label className="  text-lg mb-1">Category</label>
-      {/* dropdown */}
+      {/* 
+        // #:-------------------  Feature: Category dropdown  ------------------- //
+      */}
       <DropDown
         options={categories}
         setSelectedCategory={setCategory}
         selectedCategory={category}
+        className=""
       >
         {categories.map((category) => (
           <ListboxOption
@@ -327,7 +333,10 @@ function ItemModal({
           </ListboxOption>
         ))}
       </DropDown>
-      {/* notes input */}
+
+      {/* 
+        // #:-------------------  Feature: Notes  ------------------- //
+      */}
       <label className=" max-w-[90%] w-full text-lg mb-1">Notes</label>
       <textarea
         value={notes}
@@ -336,18 +345,26 @@ function ItemModal({
           setNotes(e.target.value);
         }}
       />
-      {/* add to list button */}
+
+      {/* 
+        // #:-------------------  Feature: Add to list / Update item  ------------------- //
+      */}
       <Button
         onClick={async () => {
           if (currentItem === null) {
             await handleAddItemToList(item, setIsEmpty);
             //  clear all states
-            setName("");
-            setQuantity(0);
-            setUnit("");
-            setPrice(0);
-            setCategory(categories[0]);
-            setNotes("");
+            clearListFields({
+              setName,
+              setCategory,
+              setQuantity,
+              setUnit,
+              setPrice,
+              setNotes,
+              setTempPrice,
+              setTempQuantity,
+            });
+            // hide modal window
             setIsModalVisible(false);
           } else {
             itemAPI.handleItemUpdate(currentItem.id, {
@@ -357,12 +374,16 @@ function ItemModal({
             });
             setCurrentItem(null);
             //  clear all states
-            setName("");
-            setQuantity(0);
-            setUnit("");
-            setPrice(0);
-            setCategory(categories[0]);
-            setNotes("");
+            clearListFields({
+              setName,
+              setCategory,
+              setQuantity,
+              setUnit,
+              setPrice,
+              setNotes,
+              setTempPrice,
+              setTempQuantity,
+            });
             setIsModalVisible(false);
           }
         }}
@@ -373,6 +394,6 @@ function ItemModal({
   );
 }
 
+// ! FIX: update the list updated_at field in the database on every item change
 // TODO: search
 // TODO: more options popup
-// TODO: fixed button at the bottom of page for when items need to be scrolled through

@@ -44,10 +44,10 @@ const handleListDelete = async (listID: string) => {
 async function asyncSetListId(
   setListID: Dispatch<SetStateAction<string>>,
   setList: Dispatch<SetStateAction<List | null>>,
-  params: Promise<{ slug: string }>,
+  params: { slug: string },
   listID: string
 ) {
-  setListID((await params).slug);
+  setListID(params.slug);
   setList((await databaseAPI.getList(listID)) ?? null);
 }
 

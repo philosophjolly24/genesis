@@ -3,6 +3,8 @@
 import listAPI from "./listService/api";
 import { useState } from "react";
 import Button from "./components/Button";
+import { ListTransferAPI } from "./listTransfer/api";
+import JSZip from "jszip";
 
 // INFO: The home page
 export default function Home() {
@@ -11,6 +13,7 @@ export default function Home() {
   const CreateNewList = listAPI.ListModal;
 
   const [isModalVisible, setIsModalVisible] = useState(false); // * state for modal window
+
 
   return (
     <>
@@ -39,6 +42,26 @@ export default function Home() {
       // NOTE: Where all the users lists will be displayed 
        */}
       <ViewAllLists></ViewAllLists>
+      {/* 
+      // ? Testing the file upload
+    
+      */}
+      <input
+        type="file"
+        accept=".zip"
+        onChange={(e) => {
+          ListTransferAPI.handleFileImport(e);
+        }}
+      />
+      <button
+        onClick={() =>
+          ListTransferAPI.handleListExport(
+            "019918a4-a240-76df-a833-c7506e118b76"
+          )
+        }
+      >
+        export list testing
+      </button>
     </>
   );
 }

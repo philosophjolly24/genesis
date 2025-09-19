@@ -11,9 +11,12 @@
   "dependencies": {
     "@headlessui/react": "^2.2.7",
     "@tailwindcss/postcss": "^4.1.12",
+    "@types/file-saver": "^2.0.7",
     "dexie": "^4.2.0",
     "dexie-react-hooks": "^4.2.0",
+    "file-saver": "^2.0.5",
     "frimousse": "^0.3.0",
+    "jszip": "^3.10.1",
     "next": "15.5.2",
     "postcss": "^8.5.6",
     "react": "19.1.0",
