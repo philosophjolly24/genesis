@@ -1,5 +1,4 @@
-import { v7 as uuidv7 } from "uuid";
-import { databaseAPI, List } from "../database/api/api";
+import { databaseAPI } from "../database/api/api";
 import { Dispatch, SetStateAction } from "react";
 import { Item } from "../database/api/api";
 
@@ -26,10 +25,17 @@ const handleAddItemToList = async (
 
 // handle item checked event
 
-const handleItemChecked = async (itemID: string, checkedState: boolean) => {
+const handleItemChecked = async (
+  itemID: string,
+  checkedState: boolean,
+  listID: string
+) => {
   await databaseAPI.updateItem(itemID, {
     checked: checkedState,
   });
+
+  // update the list updated_at field
+  await databaseAPI.updateList(listID, { updated_at: Date.now() });
 };
 
 const getListTotalPrice = (items: Item[]) =>
@@ -40,8 +46,10 @@ const getListTotalPrice = (items: Item[]) =>
     return acc;
   }, 0) ?? 0;
 
-const handleItemUpdate = async (itemID: string, item: Item) => {
+const handleItemUpdate = async (itemID: string, item: Item, listID: string) => {
   await databaseAPI.updateItem(itemID, item);
+  // update the list updated_at field
+  await databaseAPI.updateList(listID, { updated_at: Date.now() });
   return console.log("item " + itemID + " has been updated");
 };
 

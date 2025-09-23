@@ -1,9 +1,10 @@
 import { Checkbox } from "@headlessui/react";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
 import { Item } from "../../database/api/api";
 import { formatCurrency } from "../../settings";
 import { itemAPI } from "../api";
+import { ItemContext } from "../../context/appContext";
 
 interface ItemCardProps {
   item: Item;
@@ -80,19 +81,15 @@ interface CheckboxCompProps {
   itemChecked: boolean;
 }
 
-function CheckBoxComp({
-  checked,
-  setChecked,
-  itemID,
-  itemChecked,
-}: CheckboxCompProps) {
+function CheckBoxComp({ checked, setChecked, itemID }: CheckboxCompProps) {
+  const { listID } = use(ItemContext);
   return (
     <Checkbox
       checked={checked}
       defaultChecked={checked}
       onChange={async (checkedState) => {
         setChecked(checkedState);
-        await itemAPI.handleItemChecked(itemID, checkedState);
+        await itemAPI.handleItemChecked(itemID, checkedState, listID ?? "");
       }}
       onClick={(e) => {
         e.stopPropagation();

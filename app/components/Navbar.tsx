@@ -3,11 +3,49 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import Button from "./Button";
+import Modal from "./Modal";
+import { ListTransferAPI } from "../listTransfer/api";
 
 export default function Navbar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isImport, setIsImport] = useState(false);
+  const [fileName, setFileName] = useState("");
   return (
     <>
+      <Modal
+        height={60}
+        setIsModalVisible={setIsImport}
+        isModalVisible={isImport}
+      >
+        <p className=" text-center text-2xl m-4 font-semibold text-brand">
+          {fileName.trim() === "" ? "Select file" : ` file found: ${fileName}`}
+        </p>
+
+        <label
+          htmlFor="inputList"
+          className="h-40 w-[90%] bg-grey flex flex-col justify-center content-center text-center text-grey-2 text-lg rounded-md ml-auto mr-auto mb-5"
+        >
+          <Image
+            width={64}
+            height={64}
+            src={"import.svg"}
+            alt="import-file"
+            className="m-auto"
+          ></Image>
+          <p className=" text-center text-xl m-4 ">choose file</p>
+        </label>
+
+        <input
+          className="hidden"
+          id="inputList"
+          type="file"
+          accept=".zip"
+          onChange={(e) => {
+            ListTransferAPI.handleFileImport(e, setFileName, setIsImport);
+          }}
+        />
+      </Modal>
       <div
         className=" fixed flex gap-1 z-50 flex-col top-3 left-3"
         onClick={() => {
@@ -41,7 +79,7 @@ export default function Navbar() {
           }`}
         >
           <ul
-            className="p-4 space-y-2 mb-3 flex flex-col gap-5 w-60 m-auto h-full font-[400]"
+            className="p-4 space-y-2 mb-3 flex flex-col gap-5 w-[90%] m-auto h-full font-[400]"
             onClick={() => {
               setIsNavOpen(!isNavOpen);
             }}
@@ -104,6 +142,15 @@ export default function Navbar() {
                 </p>
               </li>
             </Link>
+            <li>
+              <Button
+                onClick={() => {
+                  setIsImport(true);
+                }}
+                style="w-full"
+                text="import list"
+              ></Button>
+            </li>
           </ul>
         </div>
       </div>

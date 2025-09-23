@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { databaseAPI } from "../database/api/api";
 import { v7 as uuidv7 } from "uuid";
 import { List } from "../database/api/api";
+import { list } from "postcss";
 
 interface handleCreateNewListParams {
   listName: string;
@@ -37,7 +38,15 @@ const handleCreateNewList = async ({
 };
 
 const handleListDelete = async (listID: string) => {
+  const items = databaseAPI.getAllItemsForList(listID);
+  // get all ids of items
+  const itemId = (await items).map((item) => {
+    return item.id;
+  });
+  // delete the list
   await databaseAPI.deleteList(listID);
+  // delete all items for selected list
+  await databaseAPI.deleteALlLItemsForList(itemId);
 };
 
 // INFO: asyncSetListId: set the current list id to retrieve the list items

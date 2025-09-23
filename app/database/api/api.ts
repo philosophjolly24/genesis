@@ -1,5 +1,17 @@
+import { notify } from "../../util/notify";
 import { List, Item } from "../database";
 import { db } from "../database";
+interface ListSchema {
+  list: {
+    name: string;
+    id: string;
+    emoji: string;
+    created_at: number;
+    updated_at: number;
+  };
+
+  items: Item[];
+}
 
 const databaseAPI = {
   // List Operations
@@ -26,7 +38,7 @@ const databaseAPI = {
     const updated = await db.lists.update(listId, updatedList);
     if (updated) console.log(`The item was updated successfully`);
     else
-      console.log(
+      notify.error(
         `Nothing was updated - there was no list with the id: ${listId}`
       );
     return updated;
@@ -43,6 +55,15 @@ const databaseAPI = {
   // Delete a specific item
   deleteItem: async (itemId: string) => {
     return await db.items.delete(itemId);
+  },
+  deleteALlLItemsForList: async (itemId: string[]) => {
+    try {
+      const deleted = await db.items.bulkDelete(itemId);
+      notify.success("list moved to trash");
+      return deleted;
+    } catch (err) {
+      notify.error(`error: ${err}`);
+    }
   },
 
   // Retrieve a item
@@ -75,7 +96,21 @@ const databaseAPI = {
     return updated;
   },
   // ================================================ //
+  addImportedList: async (importedList: ListSchema) => {
+    try {
+      await db.lists.add(importedList.list);
+      console.log(`list added successfully`);
+      await db.items.bulkAdd(importedList.items);
+      console.log(
+        `${importedList.items.length} items were added to the database`
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  },
 };
 
 export { databaseAPI };
-export type { List, Item };
+export type { List, Item, ListSchema };
+
+// add try catch blocks

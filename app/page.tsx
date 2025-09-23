@@ -4,7 +4,7 @@ import listAPI from "./listService/api";
 import { useState } from "react";
 import Button from "./components/Button";
 import { ListTransferAPI } from "./listTransfer/api";
-import JSZip from "jszip";
+import { Toaster } from "react-hot-toast";
 
 // INFO: The home page
 export default function Home() {
@@ -14,9 +14,9 @@ export default function Home() {
 
   const [isModalVisible, setIsModalVisible] = useState(false); // * state for modal window
 
-
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false}></Toaster>
       {/* 
         // #:-------------------  Feature:  Creating a new list   ------------------- //
       */}
@@ -46,13 +46,7 @@ export default function Home() {
       // ? Testing the file upload
     
       */}
-      <input
-        type="file"
-        accept=".zip"
-        onChange={(e) => {
-          ListTransferAPI.handleFileImport(e);
-        }}
-      />
+
       <button
         onClick={() =>
           ListTransferAPI.handleListExport(
