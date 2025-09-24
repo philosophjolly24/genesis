@@ -1,3 +1,5 @@
+import { use } from "react";
+import { ItemContext } from "../../context/appContext";
 import useCheckedItemCount from "../../hooks/useCheckedItemCount";
 import useItemCount from "../../hooks/useItemCount";
 import { formatCurrency } from "../../settings";
@@ -7,8 +9,9 @@ interface ListSummaryProps {
 }
 
 export default function ListSummary({ listTotal }: ListSummaryProps) {
-  const itemCount = useItemCount();
-  const checkedItemCount = useCheckedItemCount();
+  const { listID } = use(ItemContext);
+  const itemCount = useItemCount(listID ?? "");
+  const checkedItemCount = useCheckedItemCount(listID ?? "");
 
   return (
     <div className=" flex fixed w-full items-center justify-between bottom-0 right-0 bg-background-white  border-t border-grey-2 rounded-md h-16 pl-3 pr-3">
