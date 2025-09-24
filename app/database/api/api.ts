@@ -85,13 +85,13 @@ const databaseAPI = {
       .toArray();
   },
 
-  // Update a specific list
+  // Update a specific item
   updateItem: async (itemId: string, updatedItem: Partial<Item>) => {
     const updated = await db.items.update(itemId, updatedItem);
     if (updated) console.log(`The item was updated successfully`);
     else
       console.log(
-        `Nothing was updated - there was no list with the id: ${itemId}`
+        `Nothing was updated - there was no item with the id: ${itemId}`
       );
     return updated;
   },

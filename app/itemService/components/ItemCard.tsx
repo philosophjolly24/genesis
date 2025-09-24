@@ -1,3 +1,5 @@
+"use client";
+
 import { Checkbox } from "@headlessui/react";
 import Image from "next/image";
 import { Dispatch, SetStateAction, use, useEffect, useState } from "react";

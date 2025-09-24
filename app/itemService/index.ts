@@ -1,9 +1,13 @@
 import { databaseAPI } from "../database/api/api";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, use } from "react";
 import { Item } from "../database/api/api";
+import { ItemContext } from "../context/appContext";
+import toast from "react-hot-toast";
+import { notify } from "../util/notify";
 
 const handleAddItemToList = async (
   item: Item,
+  items: Item[],
   setIsEmpty: Dispatch<SetStateAction<boolean | null>>
 ) => {
   // validate all fields
@@ -15,13 +19,24 @@ const handleAddItemToList = async (
     if (item.list_id.trim() == "") {
       throw new Error("list not found ");
     }
+    // check if item already exists
+    const itemExists = items.find(
+      (curItem) =>
+        curItem.name === item.name.trim() && curItem.unit === item.unit
+    );
+    console.log("item exists", itemExists);
+    // if item exists, update the items
+    if (itemExists !== undefined) {
+    }
 
-    // add item to table
-    await databaseAPI.addItem(item);
+    //else add item to table
+    else await databaseAPI.addItem(item);
   } catch (err) {
     console.error(err);
   }
 };
+
+
 
 // handle item checked event
 
