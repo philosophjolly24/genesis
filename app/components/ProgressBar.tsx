@@ -1,9 +1,13 @@
 import useCheckedItemCount from "../hooks/useCheckedItemCount";
 import useItemCount from "../hooks/useItemCount";
 
-export default function ProgressBar() {
-  const itemCount = useItemCount();
-  const checkedItemCount = useCheckedItemCount();
+interface ProgressBarProps {
+  listID: string;
+}
+
+export default function ProgressBar({ listID }: ProgressBarProps) {
+  const itemCount = useItemCount(listID);
+  const checkedItemCount = useCheckedItemCount(listID);
 
   const progress = itemCount > 0 ? (checkedItemCount / itemCount) * 100 : 0;
 

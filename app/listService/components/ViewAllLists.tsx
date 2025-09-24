@@ -88,7 +88,7 @@ export default function ViewAllLists() {
                 {/* 
                 // #: -------------------  Feature: Item count  --------------------- //
                  */}
-                <CheckedItemCount></CheckedItemCount>
+                <CheckedItemCount listID={list.id}></CheckedItemCount>
 
                 {/* 
                 // #:-------------------  Feature: Context menu  ------------------- //
@@ -125,7 +125,7 @@ export default function ViewAllLists() {
               {/* 
                 // #:-------------------  Feature: Progress bar  ------------------- //  
               */}
-              <ProgressBar></ProgressBar>
+              <ProgressBar listID={list.id}></ProgressBar>
             </li>
           ))}
         </ul>
