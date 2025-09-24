@@ -57,9 +57,7 @@ export default function Home() {
         // #:-------------------  Feature: Progress bar  ------------------- //
       */}
         <div className="mb-4 sticky">
-          <ProgressBar
-            listID={listID !== undefined ? listID : ""}
-          ></ProgressBar>
+          <ProgressBar></ProgressBar>
         </div>
         {/* 
         // #:-------------------  Feature:  List heading bar  ------------------- //
@@ -73,7 +71,6 @@ export default function Home() {
             content={({ close }) =>
               ListOptions({
                 close,
-                listID,
               })
             }
           >
@@ -117,10 +114,7 @@ export default function Home() {
         {/* 
           // #:-------------------  List summary  ------------------- //
         */}
-        <ListSummary
-          listTotal={listTotal}
-          listID={listID !== undefined ? listID : ""}
-        ></ListSummary>
+        <ListSummary listTotal={listTotal}></ListSummary>
         {/*
           // * if there are no lists  
         */}

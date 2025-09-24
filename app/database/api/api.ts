@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { notify } from "../../util/notify";
 import { List, Item } from "../database";
 import { db } from "../database";
@@ -36,7 +37,7 @@ const databaseAPI = {
   // Update a specific list
   updateList: async (listId: string, updatedList: Partial<List>) => {
     const updated = await db.lists.update(listId, updatedList);
-    if (updated) console.log(`The item was updated successfully`);
+    if (updated) notify.success(`The list was updated successfully`);
     else
       notify.error(
         `Nothing was updated - there was no list with the id: ${listId}`
@@ -71,9 +72,10 @@ const databaseAPI = {
     return await db.items.get(itemId);
   },
   // Retrieves all items for a target list
-  getAllItemsForList: (listId: string) => {
-    // return the query to that you can use it in useLiveQuery
-    return db.items.where("list_id").equals(listId).toArray();
+  getAllItemsForList: async (listId: string) => {
+    const items = await db.items.where("list_id").equals(listId).toArray();
+
+    return items.sort((a, b) => Number(a.checked) - Number(b.checked));
   },
 
   getAllCheckedListItems: (listId: string) => {
@@ -88,9 +90,9 @@ const databaseAPI = {
   // Update a specific item
   updateItem: async (itemId: string, updatedItem: Partial<Item>) => {
     const updated = await db.items.update(itemId, updatedItem);
-    if (updated) console.log(`The item was updated successfully`);
+    if (updated) notify.success(`The item was updated successfully`);
     else
-      console.log(
+      notify.error(
         `Nothing was updated - there was no item with the id: ${itemId}`
       );
     return updated;
@@ -99,10 +101,10 @@ const databaseAPI = {
   addImportedList: async (importedList: ListSchema) => {
     try {
       await db.lists.add(importedList.list);
-      console.log(`list added successfully`);
+
       await db.items.bulkAdd(importedList.items);
-      console.log(
-        `${importedList.items.length} items were added to the database`
+      notify.success(
+        `list added successfully, ${importedList.items.length} items were added`
       );
     } catch (err) {
       console.error(err);
@@ -113,4 +115,5 @@ const databaseAPI = {
 export { databaseAPI };
 export type { List, Item, ListSchema };
 
-// add try catch blocks
+// TODO: add try catch blocks
+// TODO: add toast notifications (notify)

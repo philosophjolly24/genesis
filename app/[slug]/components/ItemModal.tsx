@@ -101,7 +101,7 @@ export default function ItemModal({
           "items already exists, displaying item information ...",
           "📢"
         );
-        console.log("item exists", itemExists);
+
         setItemExists(true);
         setName(itemExists.name);
         heading.current = itemExists.name;

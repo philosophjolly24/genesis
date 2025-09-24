@@ -10,7 +10,6 @@ import {
   useState,
 } from "react";
 import { databaseAPI, Item, List } from "../database/api/api";
-import listAPI from "../listService/api";
 import useCheckedItemCount from "../hooks/useCheckedItemCount";
 import { useParams } from "next/navigation";
 
@@ -70,7 +69,9 @@ function ItemProvider({ children }: ItemProviderProps) {
     return [];
   }, [listID]);
 
-  const itemsChecked = useCheckedItemCount(listID);
+
+
+  const itemsChecked = useCheckedItemCount();
 
   if (isLoading || items === undefined) {
     return <div>Loading...</div>;

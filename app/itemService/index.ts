@@ -1,8 +1,6 @@
 import { databaseAPI } from "../database/api/api";
-import { Dispatch, SetStateAction, use } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Item } from "../database/api/api";
-import { ItemContext } from "../context/appContext";
-import toast from "react-hot-toast";
 import { notify } from "../util/notify";
 
 const handleAddItemToList = async (
@@ -16,27 +14,13 @@ const handleAddItemToList = async (
       setIsEmpty(true);
       return;
     }
-    if (item.list_id.trim() == "") {
-      throw new Error("list not found ");
-    }
-    // check if item already exists
-    const itemExists = items.find(
-      (curItem) =>
-        curItem.name === item.name.trim() && curItem.unit === item.unit
-    );
-    console.log("item exists", itemExists);
-    // if item exists, update the items
-    if (itemExists !== undefined) {
-    }
-
-    //else add item to table
-    else await databaseAPI.addItem(item);
+    // add item to table
+    await databaseAPI.addItem(item);
   } catch (err) {
     console.error(err);
+    notify.error("an error occurred!");
   }
 };
-
-
 
 // handle item checked event
 
@@ -65,7 +49,6 @@ const handleItemUpdate = async (itemID: string, item: Item, listID: string) => {
   await databaseAPI.updateItem(itemID, item);
   // update the list updated_at field
   await databaseAPI.updateList(listID, { updated_at: Date.now() });
-  return console.log("item " + itemID + " has been updated");
 };
 
 export {

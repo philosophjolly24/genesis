@@ -115,3 +115,5 @@ function CheckBoxComp({ checked, setChecked, itemID }: CheckboxCompProps) {
     </Checkbox>
   );
 }
+
+// TODO: add a sorting feature for checked

@@ -1,18 +1,20 @@
 import Image from "next/image";
 import { ListTransferAPI } from "../../listTransfer/api";
+import { ItemContext } from "../../context/appContext";
+import { use } from "react";
 
 interface ListOptionsProps {
-  listID: string;
   close?: () => void;
 }
-export default function ListOptions({ listID, close }: ListOptionsProps) {
+export default function ListOptions({ close }: ListOptionsProps) {
+  const { listID } = use(ItemContext);
   return (
     <>
       <div className="z-10 bg-background-white h-auto w-50 flex flex-col  rounded-md border-2 border-grey  mr-2">
         <div
           className=" flex border-b border-grey-2 h-15 text-lg align-center items-center gap-4"
           onClick={async () => {
-            await ListTransferAPI.handleListExport(listID);
+            await ListTransferAPI.handleListExport(listID ?? "");
             close?.();
           }}
         >

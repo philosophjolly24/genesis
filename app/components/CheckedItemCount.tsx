@@ -1,12 +1,9 @@
 import useCheckedItemCount from "../hooks/useCheckedItemCount";
 import useItemCount from "../hooks/useItemCount";
 
-interface CheckedItemCountProps {
-  listID: string;
-}
-export default function CheckedItemCount({ listID }: CheckedItemCountProps) {
-  const itemCount = useItemCount(listID);
-  const checkedItemCount = useCheckedItemCount(listID);
+export default function CheckedItemCount() {
+  const itemCount = useItemCount();
+  const checkedItemCount = useCheckedItemCount();
 
   return (
     <>
