@@ -2,8 +2,9 @@ import JSZip from "jszip";
 import { databaseAPI } from "../database/api/api";
 import { saveAs } from "file-saver";
 import { Dispatch, SetStateAction } from "react";
-import Ajv, { JSONSchemaType, DefinedError } from "ajv";
+import Ajv from "ajv";
 import { schema } from "./schema";
+import { notify } from "../util/notify";
 
 const handleListExport = async (listId: string) => {
   // create the file object
@@ -14,7 +15,6 @@ const handleListExport = async (listId: string) => {
     list,
     items,
   };
-  console.log(ExportedList);
 
   const zip = new JSZip();
   // generate JSON file
@@ -43,18 +43,12 @@ const handleFileImport = async (
         try {
           const zip = await JSZip.loadAsync(zipData ?? "");
           zip.forEach(async (relPath, ZipEntry) => {
-            console.log("file: ", relPath);
             setFileName(relPath);
-            console.log(relPath);
             const fileData = await ZipEntry.async("text");
-            console.log(JSON.parse(fileData));
             const importedList = validateJSON(fileData);
 
-            // TODO: add to data to database
             if (importedList !== undefined)
               databaseAPI.addImportedList(importedList);
-            // TODO: let users know it has been added,or deleted
-            // TODO:  redirect to homepage
           });
         } catch (err) {
           console.error("Error loading ZIP file:", err);
@@ -72,9 +66,9 @@ const validate = ajv.compile(schema);
 function validateJSON(data: string) {
   const list = JSON.parse(data);
   if (validate(list)) {
-    console.log("validated data", list);
     return list;
   } else {
+    notify.error("Validation error: could not validate list");
     console.log(validate.errors);
   }
 }

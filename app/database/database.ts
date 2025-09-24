@@ -37,7 +37,7 @@ const db = new Dexie("GenesisDB") as Dexie & {
 db.version(1).stores({
   categories: "++id, name",
   lists: "id, name,created_at,updated_at",
-  items: "id,list_id,category_id,quantity,name,notes",
+  items: "id,list_id,quantity,name,notes,checked,price,quantity,unit",
 });
 
 export type { List, Item };

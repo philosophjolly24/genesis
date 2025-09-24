@@ -1,3 +1,5 @@
+"use client";
+
 import { Checkbox } from "@headlessui/react";
 import Image from "next/image";
 import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
@@ -113,3 +115,5 @@ function CheckBoxComp({ checked, setChecked, itemID }: CheckboxCompProps) {
     </Checkbox>
   );
 }
+
+// TODO: add a sorting feature for checked
