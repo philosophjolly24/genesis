@@ -34,7 +34,7 @@ const db = new Dexie("GenesisDB") as Dexie & {
 };
 
 // Schema declaration:
-db.version(1).stores({
+db.version(2).stores({
   categories: "++id, name",
   lists: "id, name,created_at,updated_at",
   items: "id,list_id,quantity,name,notes,checked,price,quantity,unit",

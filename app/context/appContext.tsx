@@ -71,7 +71,7 @@ function ItemProvider({ children }: ItemProviderProps) {
 
 
 
-  const itemsChecked = useCheckedItemCount();
+  const itemsChecked = useCheckedItemCount(listID);
 
   if (isLoading || items === undefined) {
     return <div>Loading...</div>;
