@@ -57,7 +57,7 @@ export default function Home() {
         // #:-------------------  Feature: Progress bar  ------------------- //
       */}
         <div className="mb-4 sticky">
-          <ProgressBar></ProgressBar>
+          <ProgressBar listID={listID}></ProgressBar>
         </div>
         {/* 
         // #:-------------------  Feature:  List heading bar  ------------------- //
