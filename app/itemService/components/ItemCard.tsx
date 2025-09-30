@@ -56,7 +56,14 @@ export default function ItemCard({ item }: ItemCardProps) {
               !checked ? "text-black-2" : "text-black-4/40"
             }`}
           >
-            {item.name}
+            {` ${item.name}`}{" "}
+            <strong
+              className={` font-normal ml-2  ${
+                !checked ? "text-grey-3" : "text-grey-3/20"
+              }`}
+            >
+              {item.unit ? `(${item.unit})` : null}
+            </strong>
           </p>
         </div>
         {item.quantity === 0 ? null : (

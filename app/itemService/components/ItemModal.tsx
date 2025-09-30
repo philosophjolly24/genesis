@@ -18,8 +18,8 @@ import { formatCurrency } from "../../settings";
 import DropDown from "../../components/Dropdown";
 import { ListboxOption } from "@headlessui/react";
 import Button from "../../components/Button";
-import { handleAddItemToList } from "../../itemService";
-import { itemAPI } from "../../itemService/api";
+import { handleAddItemToList, handleItemDelete } from "..";
+import { itemAPI } from "../api";
 import { notify } from "../../util/notify";
 import { Toaster } from "react-hot-toast";
 
@@ -65,7 +65,7 @@ export default function ItemModal({
   const item = {
     id: uuidv7(),
     list_id: listID ?? "",
-    name,
+    name: name.trim(),
     quantity,
     unit,
     price,
@@ -90,10 +90,12 @@ export default function ItemModal({
 
   // * check if item already exists
   useEffect(() => {
-    if (!currentItem) {
+    if (!currentItem && name.trim() !== "") {
       const itemExists = items?.find(
-        (curItem) =>
-          curItem.name === item.name.trim() && curItem.unit === item.unit
+        // message triggers because u clear the edit when you close the modal
+        (curItem) => {
+          return curItem.name === name.trim() && curItem.unit === unit.trim();
+        }
       );
 
       if (itemExists) {
@@ -113,8 +115,8 @@ export default function ItemModal({
         setCategory(itemExists.category ?? categories[0]);
         setNotes(itemExists.notes ?? "");
       }
-    }
-  }, [items, item.name, item.unit, currentItem]);
+    } else if (currentItem) heading.current = currentItem?.name ?? "";
+  }, [items, name, currentItem, unit]);
 
   return (
     <>
@@ -296,6 +298,7 @@ export default function ItemModal({
                 setTempPrice,
                 setTempQuantity,
               });
+              setItemExists(false);
               // hide modal window
               setIsModalVisible(false);
             } else {
@@ -320,12 +323,37 @@ export default function ItemModal({
                 setTempPrice,
                 setTempQuantity,
               });
+              setItemExists(false);
               setIsModalVisible(false);
             }
           }}
           text={currentItem !== null ? "update item" : "Add Item to list"}
           style=" mb-4 mt-2 "
         ></Button>
+        <p
+          className={`text-red-400 text-xl font-semibold pb-3 ${
+            currentItem !== null ? "" : `hidden`
+          }`}
+          onClick={() => {
+            handleItemDelete(currentItem?.id ?? "");
+            setCurrentItem(null);
+            //  clear all states
+            clearListFields({
+              setName,
+              setCategory,
+              setQuantity,
+              setUnit,
+              setPrice,
+              setNotes,
+              setTempPrice,
+              setTempQuantity,
+            });
+            setItemExists(false);
+            setIsModalVisible(false);
+          }}
+        >
+          delete item
+        </p>
       </Modal>
     </>
   );
