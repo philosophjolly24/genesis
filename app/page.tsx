@@ -3,7 +3,6 @@
 import listAPI from "./listService/api";
 import { useState } from "react";
 import Button from "./components/Button";
-import { ListTransferAPI } from "./listTransfer/api";
 import { Toaster } from "react-hot-toast";
 
 // INFO: The home page
@@ -44,18 +43,7 @@ export default function Home() {
       <ViewAllLists></ViewAllLists>
       {/* 
       // ? Testing the file upload
-    
       */}
-
-      <button
-        onClick={() =>
-          ListTransferAPI.handleListExport(
-            "019918a4-a240-76df-a833-c7506e118b76"
-          )
-        }
-      >
-        export list testing
-      </button>
     </>
   );
 }

@@ -27,6 +27,8 @@ interface ItemContextType {
   setList?: Dispatch<SetStateAction<List | null>>;
   listID?: string;
   setListID?: Dispatch<SetStateAction<string>>;
+  useSearch?: (query: string) => void;
+  filteredItems?: Item[];
 }
 
 // Create context with default values
@@ -39,6 +41,9 @@ function ItemProvider({ children }: ItemProviderProps) {
   const [listID, setListID] = useState("");
   const [list, setList] = useState<List | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [filteredItems, setFilteredItems] = useState<Item[] | undefined>(
+    undefined
+  );
 
   const params = useParams<{ slug: string }>();
 
@@ -69,7 +74,15 @@ function ItemProvider({ children }: ItemProviderProps) {
     return [];
   }, [listID]);
 
-
+  const useSearch = (query: string) => {
+    useEffect(() => {
+      const filter = async () => {
+        const items = await databaseAPI.filterListItems(listID, query);
+        setFilteredItems(items);
+      };
+      filter();
+    }, [query]);
+  };
 
   const itemsChecked = useCheckedItemCount(listID);
 
@@ -79,7 +92,16 @@ function ItemProvider({ children }: ItemProviderProps) {
 
   return (
     <ItemContext.Provider
-      value={{ items, itemsChecked, list, setList, listID, setListID }}
+      value={{
+        items,
+        itemsChecked,
+        list,
+        setList,
+        listID,
+        setListID,
+        useSearch,
+        filteredItems,
+      }}
     >
       {children}
     </ItemContext.Provider>

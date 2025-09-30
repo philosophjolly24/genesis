@@ -67,6 +67,16 @@ const databaseAPI = {
     }
   },
 
+  deleteAllCheckedItems: async (itemId: string[]) => {
+    try {
+      const deleted = await db.items.bulkDelete(itemId);
+      notify.success("all checked items have been deleted");
+      return deleted;
+    } catch (err) {
+      notify.error(`error: ${err}`);
+    }
+  },
+
   // Retrieve a item
   getItem: async (itemId: string) => {
     return await db.items.get(itemId);
@@ -86,15 +96,39 @@ const databaseAPI = {
       .and((item) => item.checked === true)
       .toArray();
   },
+  filterListItems: (listId: string, query: string) => {
+    return db.items
+      .where("list_id")
+      .equals(listId)
+      .filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
+      .toArray();
+  },
 
   // Update a specific item
   updateItem: async (itemId: string, updatedItem: Partial<Item>) => {
     const updated = await db.items.update(itemId, updatedItem);
-    if (updated) notify.success(`The item was updated successfully`);
+    if (updated) return null;
     else
       notify.error(
         `Nothing was updated - there was no item with the id: ${itemId}`
       );
+    return updated;
+  },
+  updateAllListItems: async (
+    allItems: Item[],
+    updatedItem: Partial<Item>,
+    listID: string
+  ) => {
+    const updated = await db.items.bulkUpdate(
+      allItems.map((item) => {
+        return { key: item.id, changes: updatedItem };
+      })
+    );
+    // update the list updated_at field
+    await databaseAPI.updateList(listID, { updated_at: Date.now() });
+
+    if (updated) return null;
+    else notify.error(`Nothing was updated - items could not be updated`);
     return updated;
   },
   // ================================================ //

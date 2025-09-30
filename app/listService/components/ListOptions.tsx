@@ -1,13 +1,24 @@
 import Image from "next/image";
 import { ListTransferAPI } from "../../listTransfer/api";
 import { ItemContext } from "../../context/appContext";
-import { use } from "react";
+import { Dispatch, SetStateAction, use, useState } from "react";
+import { Item } from "../../database/api/api";
+import { notify } from "../../util/notify";
+import { itemAPI } from "../../itemService/api";
 
 interface ListOptionsProps {
   close?: () => void;
+  allItems: Item[];
+  setAllItems: Dispatch<SetStateAction<Item[] | undefined>>;
 }
-export default function ListOptions({ close }: ListOptionsProps) {
+export default function ListOptions({
+  close,
+  allItems,
+  setAllItems,
+}: ListOptionsProps) {
   const { listID } = use(ItemContext);
+  const [count, setCount] = useState(0);
+  const filters = ["name", "category", "price"];
   return (
     <>
       <div className="z-10 bg-background-white h-auto w-50 flex flex-col  rounded-md border-2 border-grey  mr-2">
@@ -31,7 +42,13 @@ export default function ListOptions({ close }: ListOptionsProps) {
         <div
           className=" flex border-b border-grey-2 h-15 text-lg align-center items-center gap-4"
           onClick={() => {
-            close?.();
+            itemAPI.handleItemSortBy(
+              allItems,
+              filters,
+              count,
+              setCount,
+              setAllItems
+            );
           }}
         >
           <Image
@@ -41,12 +58,16 @@ export default function ListOptions({ close }: ListOptionsProps) {
             alt="sort"
             className="ml-2 "
           ></Image>{" "}
-          <p className="grow  text-left"> sort by:</p>
+          <p className="grow  text-left">
+            sort by:
+            {<strong className="text-brand">{` ${filters[count]}`}</strong>}
+          </p>
         </div>
 
         <div
           className=" flex border-b border-grey-2 h-15 text-lg align-center items-center gap-4"
           onClick={() => {
+            itemAPI.handleItemUncheck(allItems, listID ?? "");
             close?.();
           }}
         >
@@ -57,12 +78,16 @@ export default function ListOptions({ close }: ListOptionsProps) {
             alt="uncheck"
             className="ml-2"
           ></Image>{" "}
-          <p className="grow  text-left p2"> uncheck all items</p>
+          <p className="grow  text-left p2" onClick={() => {}}>
+            {" "}
+            uncheck all items
+          </p>
         </div>
 
         <button
           className="border-b border-grey-2  h-15 text-lg text-error-1 gap-3 font-semibold"
           onClick={() => {
+            itemAPI.handleDeleteCheckedItems(allItems);
             close?.();
           }}
         >
