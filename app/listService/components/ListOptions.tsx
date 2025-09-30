@@ -5,12 +5,14 @@ import { Dispatch, SetStateAction, use, useState } from "react";
 import { Item } from "../../database/api/api";
 import { notify } from "../../util/notify";
 import { itemAPI } from "../../itemService/api";
+import { Filters } from "../../itemService";
 
 interface ListOptionsProps {
   close?: () => void;
   allItems: Item[];
   setAllItems: Dispatch<SetStateAction<Item[] | undefined>>;
 }
+
 export default function ListOptions({
   close,
   allItems,
@@ -18,7 +20,7 @@ export default function ListOptions({
 }: ListOptionsProps) {
   const { listID } = use(ItemContext);
   const [count, setCount] = useState(0);
-  const filters = ["name", "category", "price"];
+  const filters: Filters[] = ["name", "category", "price"];
   return (
     <>
       <div className="z-10 bg-background-white h-auto w-50 flex flex-col  rounded-md border-2 border-grey  mr-2">
