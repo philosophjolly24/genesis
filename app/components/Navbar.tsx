@@ -74,7 +74,7 @@ export default function Navbar() {
         <div
           className={`fixed rounded-b-lg  transform transition-transform duration-500  z-40 ${
             isNavOpen
-              ? " bg-background-white w-full h-[31%] translate-y-0 "
+              ? " bg-background-white w-full h-auto translate-y-0 "
               : "-translate-y-full"
           }`}
         >
