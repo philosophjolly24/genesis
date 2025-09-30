@@ -1,7 +1,7 @@
-import toast from "react-hot-toast";
 import { notify } from "../../util/notify";
 import { List, Item } from "../database";
 import { db } from "../database";
+
 interface ListSchema {
   list: {
     name: string;
@@ -15,26 +15,26 @@ interface ListSchema {
 }
 
 const databaseAPI = {
-  // List Operations
+  // *-------------------  List Operations  ------------------- //
 
-  // Add new list
+  // INFO: create a new list
   addList: async (list: List) => {
     return await db.lists.add(list);
   },
 
-  // Delete a specific list
+  // INFO: Delete a list
   deleteList: async (listId: string) => {
     return await db.lists.delete(listId);
   },
 
-  // Retrieve a list
+  // INFO: Read a list
   getList: async (listId: string) => {
     return await db.lists.get(listId);
   },
-  // Retrieve all lists (use with useLiveQuery)
+  // Read all lists (use with useLiveQuery)
   getAllLists: () => db.lists.toArray(),
 
-  // Update a specific list
+  // INFO: Update a list
   updateList: async (listId: string, updatedList: Partial<List>) => {
     const updated = await db.lists.update(listId, updatedList);
     if (updated) notify.success(`The list was updated successfully`);
@@ -44,19 +44,21 @@ const databaseAPI = {
       );
     return updated;
   },
-  // ================================================ //
+  // *---------------------------------------------------------------//
 
-  // Item Operations
+  // *-------------------  Item Operations  ------------------- //
 
-  // Add new item
+  // INFO: Add an item
   addItem: async (item: Item) => {
     return await db.items.add(item);
   },
 
-  // Delete a specific item
+  // INFO: Delete an item
   deleteItem: async (itemId: string) => {
     return await db.items.delete(itemId);
   },
+
+  // INFO: Delete all items related with a list (used when deleting a list)
   deleteALlLItemsForList: async (itemId: string[]) => {
     try {
       const deleted = await db.items.bulkDelete(itemId);
@@ -67,6 +69,7 @@ const databaseAPI = {
     }
   },
 
+  // INFO: Delete all checked items (used for batch item deletions)
   deleteAllCheckedItems: async (itemId: string[]) => {
     try {
       const deleted = await db.items.bulkDelete(itemId);
@@ -77,17 +80,18 @@ const databaseAPI = {
     }
   },
 
-  // Retrieve a item
+  // INFO: Read a item
   getItem: async (itemId: string) => {
     return await db.items.get(itemId);
   },
-  // Retrieves all items for a target list
+
+  // INFO: Read for all items related with specified list
   getAllItemsForList: async (listId: string) => {
     const items = await db.items.where("list_id").equals(listId).toArray();
 
-    return items.sort((a, b) => Number(a.checked) - Number(b.checked));
+    return items.sort((a, b) => Number(a.checked) - Number(b.checked)) ?? [];
   },
-
+  // INFO: Reads for all checked items on a list
   getAllCheckedListItems: (listId: string) => {
     // return the query to that you can use it in useLiveQuery
     return db.items
@@ -96,6 +100,8 @@ const databaseAPI = {
       .and((item) => item.checked === true)
       .toArray();
   },
+
+  // INFO: filters list items based on a specific query
   filterListItems: (listId: string, query: string) => {
     return db.items
       .where("list_id")
@@ -104,7 +110,7 @@ const databaseAPI = {
       .toArray();
   },
 
-  // Update a specific item
+  // INFO: Update a item
   updateItem: async (itemId: string, updatedItem: Partial<Item>) => {
     const updated = await db.items.update(itemId, updatedItem);
     if (updated) return null;
@@ -114,6 +120,8 @@ const databaseAPI = {
       );
     return updated;
   },
+
+  // INFO: Update a group of items (used for changes like unchecking all items)
   updateAllListItems: async (
     allItems: Item[],
     updatedItem: Partial<Item>,
@@ -131,7 +139,12 @@ const databaseAPI = {
     else notify.error(`Nothing was updated - items could not be updated`);
     return updated;
   },
-  // ================================================ //
+
+  //* ---------------------------------------------------------------//
+
+  // *-------------------  List Sharing Operations  ------------------- //
+
+  // INFO: import a list
   addImportedList: async (importedList: ListSchema) => {
     try {
       await db.lists.add(importedList.list);
@@ -148,6 +161,3 @@ const databaseAPI = {
 
 export { databaseAPI };
 export type { List, Item, ListSchema };
-
-// TODO: add try catch blocks
-// TODO: add toast notifications (notify)
