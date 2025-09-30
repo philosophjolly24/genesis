@@ -1,0 +1,21 @@
+{
+  "name": "Genesis",
+  "short_name": "Genesis",
+  "description": "an offline shopping list manager app",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "genesis-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "genesis-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffb343"
+}
