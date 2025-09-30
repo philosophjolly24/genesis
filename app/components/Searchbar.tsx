@@ -17,7 +17,6 @@ export default function SearchBar({
   inputRef,
 }: searchBarProp) {
   useEffect(() => {
-
     if (isExpanded && inputRef.current) {
       inputRef.current.focus();
     }
@@ -33,12 +32,12 @@ export default function SearchBar({
         id=""
         ref={inputRef}
         value={query}
-        className={`transition-all duration-500 ease-in-out h-10  border-grey bg-background-white rounded-md overflow-hidden ${
-          isExpanded ? `max-w-[140px] px-2 border` : `max-w-0 px-0 border-none`
+        className={`transition-all duration-500 ease-in-out h-10 bg-background-white rounded-md overflow-hidden  ${
+          isExpanded
+            ? `max-w-[140px] px-2 border-2  border-brand focus:outline-0`
+            : `max-w-0 px-0 border-none`
         }`}
       />
     </>
   );
 }
-
-
