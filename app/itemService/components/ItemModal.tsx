@@ -43,6 +43,7 @@ export default function ItemModal({
   const [quantity, setQuantity] = useState(0);
   const [unit, setUnit] = useState("");
   const [tempPrice, setTempPrice] = useState<string>("");
+  const [currentID, setCurrentID] = useState<string>("");
   const [tempQuantity, setTempQuantity] = useState<string>("");
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState<{
@@ -85,6 +86,7 @@ export default function ItemModal({
       setTempPrice(currentItem.price?.toString() ?? "0");
       setCategory(currentItem.category ?? categories[0]);
       setNotes(currentItem.notes ?? "");
+      heading.current = currentItem?.name ?? "";
     }
   }, [currentItem]);
 
@@ -103,20 +105,10 @@ export default function ItemModal({
           "items already exists, displaying item information ...",
           "📢"
         );
-
-        setItemExists(true);
-        setName(itemExists.name);
-        heading.current = itemExists.name;
-        setQuantity(itemExists.quantity ?? 0);
-        setTempQuantity(itemExists.quantity?.toString() ?? "0");
-        setUnit(itemExists.unit ?? "");
-        setPrice(itemExists.price ?? 0);
-        setTempPrice(itemExists.price?.toString() ?? "0");
-        setCategory(itemExists.category ?? categories[0]);
-        setNotes(itemExists.notes ?? "");
+        setCurrentItem(itemExists);
       }
-    } else if (currentItem) heading.current = currentItem?.name ?? "";
-  }, [items, name, currentItem, unit]);
+    }
+  }, [setCurrentItem, items, name, currentItem, unit]);
 
   return (
     <>
@@ -126,7 +118,10 @@ export default function ItemModal({
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         setCurrentItem={setCurrentItem}
+        //  clear all states
         onClear={() => {
+          setIsEmpty(false);
+          setCurrentItem(null);
           clearListFields({
             setName,
             setCategory,
@@ -137,7 +132,8 @@ export default function ItemModal({
             setTempPrice,
             setTempQuantity,
           });
-          setIsEmpty(false);
+          setItemExists(false);
+          setIsModalVisible(false);
           heading.current = "";
         }}
       >
@@ -285,8 +281,16 @@ export default function ItemModal({
       */}
         <Button
           onClick={async () => {
-            if (currentItem === null) {
-              await handleAddItemToList(item, items ?? [], setIsEmpty);
+            if (currentItem) {
+              itemAPI.handleItemUpdate(
+                currentItem.id,
+                {
+                  ...item,
+                  id: currentItem.id,
+                  checked: currentItem.checked, // add option to settings later to choose this mode
+                },
+                listID ?? ""
+              );
               //  clear all states
               clearListFields({
                 setName,
@@ -301,16 +305,8 @@ export default function ItemModal({
               setItemExists(false);
               // hide modal window
               setIsModalVisible(false);
-            } else {
-              itemAPI.handleItemUpdate(
-                currentItem.id,
-                {
-                  ...item,
-                  id: currentItem.id,
-                  checked: currentItem.checked, // add option to settings later to choose this mode
-                },
-                listID ?? ""
-              );
+            } else if (currentItem === null) {
+              await handleAddItemToList(item, items ?? [], setIsEmpty);
               setCurrentItem(null);
               //  clear all states
               clearListFields({
