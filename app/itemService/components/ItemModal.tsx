@@ -22,6 +22,7 @@ import { handleAddItemToList, handleItemDelete } from "..";
 import { itemAPI } from "../api";
 import { notify } from "../../util/notify";
 import { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
 // * Interfaces
 interface AddItemToListProps {
@@ -43,7 +44,6 @@ export default function ItemModal({
   const [quantity, setQuantity] = useState(0);
   const [unit, setUnit] = useState("");
   const [tempPrice, setTempPrice] = useState<string>("");
-  const [currentID, setCurrentID] = useState<string>("");
   const [tempQuantity, setTempQuantity] = useState<string>("");
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState<{
@@ -53,6 +53,7 @@ export default function ItemModal({
   const [notes, setNotes] = useState("");
   const [isEmpty, setIsEmpty] = useState<boolean | null>(null);
   const [itemExists, setItemExists] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // * Refs
   const priceRef = useRef<HTMLInputElement>(null);
@@ -68,7 +69,7 @@ export default function ItemModal({
     list_id: listID ?? "",
     name: name.trim(),
     quantity,
-    unit,
+    unit: unit.trim(),
     price,
     category,
     notes,
@@ -87,28 +88,19 @@ export default function ItemModal({
       setCategory(currentItem.category ?? categories[0]);
       setNotes(currentItem.notes ?? "");
       heading.current = currentItem?.name ?? "";
+      setIsEditing(true);
     }
   }, [currentItem]);
 
   // * check if item already exists
-  useEffect(() => {
-    if (!currentItem && name.trim() !== "") {
-      const itemExists = items?.find(
-        // message triggers because u clear the edit when you close the modal
-        (curItem) => {
-          return curItem.name === name.trim() && curItem.unit === unit.trim();
-        }
-      );
-
-      if (itemExists) {
-        notify.emoji(
-          "items already exists, displaying item information ...",
-          "📢"
-        );
-        setCurrentItem(itemExists);
-      }
-    }
-  }, [setCurrentItem, items, name, currentItem, unit]);
+  useEffect(() => {}, [
+    setCurrentItem,
+    items,
+    name,
+    currentItem,
+    unit,
+    isEditing,
+  ]);
 
   return (
     <>
@@ -120,8 +112,11 @@ export default function ItemModal({
         setCurrentItem={setCurrentItem}
         //  clear all states
         onClear={() => {
+          setItemExists(false);
+          setIsModalVisible(false);
           setIsEmpty(false);
           setCurrentItem(null);
+          setIsEditing(false);
           clearListFields({
             setName,
             setCategory,
@@ -132,20 +127,45 @@ export default function ItemModal({
             setTempPrice,
             setTempQuantity,
           });
-          setItemExists(false);
-          setIsModalVisible(false);
           heading.current = "";
         }}
       >
-        <h1 className="font-open-sans text-3xl font-[550] m-auto text-center pt-10 pb-10 m-a text-black-1 truncate pl-4 pr-4 sticky max-w-[90%]">
-          {/*
+        <div className="flex items-center justify-center w-full gap-3">
+          <h1 className="font-open-sans text-3xl font-[550] text-center py-10  m-a text-black-1 truncate sticky max-w-[90%] grow">
+            {/*
          // NOTE: (currentItem !== null ?) checks whether an item will be updated or whether a user wants to add a new item
          */}
-          {(currentItem === null && itemExists === false) ||
-          heading.current === ""
-            ? "Add Item to list"
-            : currentItem?.name || heading.current}
-        </h1>
+            {(currentItem === null && itemExists === false) ||
+            heading.current === ""
+              ? "Add Item to list"
+              : currentItem?.name || heading.current}
+          </h1>
+          <Image
+            width={36}
+            height={36}
+            src={"close.svg"}
+            alt="close"
+            className="mr-4"
+            onClick={() => {
+              setItemExists(false);
+              setIsModalVisible(false);
+              setIsEmpty(false);
+              setCurrentItem(null);
+              setIsEditing(false);
+              clearListFields({
+                setName,
+                setCategory,
+                setQuantity,
+                setUnit,
+                setPrice,
+                setNotes,
+                setTempPrice,
+                setTempQuantity,
+              });
+              heading.current = "";
+            }}
+          ></Image>
+        </div>
         {/* 
         // #:-------------------  Feature: Name  ------------------- //
       */}
@@ -280,49 +300,26 @@ export default function ItemModal({
         // #:-------------------  Feature: Add to list / Update item  ------------------- //
       */}
         <Button
-          onClick={async () => {
-            if (currentItem) {
-              itemAPI.handleItemUpdate(
-                currentItem.id,
-                {
-                  ...item,
-                  id: currentItem.id,
-                  checked: currentItem.checked, // add option to settings later to choose this mode
-                },
-                listID ?? ""
-              );
-              //  clear all states
-              clearListFields({
-                setName,
-                setCategory,
-                setQuantity,
-                setUnit,
-                setPrice,
-                setNotes,
-                setTempPrice,
-                setTempQuantity,
-              });
-              setItemExists(false);
-              // hide modal window
-              setIsModalVisible(false);
-            } else if (currentItem === null) {
-              await handleAddItemToList(item, items ?? [], setIsEmpty);
-              setCurrentItem(null);
-              //  clear all states
-              clearListFields({
-                setName,
-                setCategory,
-                setQuantity,
-                setUnit,
-                setPrice,
-                setNotes,
-                setTempPrice,
-                setTempQuantity,
-              });
-              setItemExists(false);
-              setIsModalVisible(false);
-            }
-          }}
+          onClick={async () =>
+            handleButtonClick({
+              currentItem,
+              items,
+              item,
+              listID,
+              setIsEmpty,
+              setIsModalVisible,
+              setItemExists,
+              setCurrentItem,
+              setName,
+              setCategory,
+              setQuantity,
+              setUnit,
+              setPrice,
+              setNotes,
+              setTempPrice,
+              setTempQuantity,
+            })
+          }
           text={currentItem !== null ? "update item" : "Add Item to list"}
           style=" mb-4 mt-2 "
         ></Button>
@@ -354,3 +351,105 @@ export default function ItemModal({
     </>
   );
 }
+
+interface handleButtonClickProps {
+  currentItem: Item | null;
+  item: Item;
+  items: Item[] | undefined;
+  listID: string | undefined;
+  setIsEmpty: Dispatch<SetStateAction<boolean | null>>;
+  setIsModalVisible: Dispatch<SetStateAction<boolean>>;
+  setItemExists: Dispatch<SetStateAction<boolean>>;
+  setCurrentItem: Dispatch<SetStateAction<Item | null>>;
+  setName: Dispatch<SetStateAction<string>>;
+  setCategory: Dispatch<
+    SetStateAction<{
+      id: number;
+      name: string;
+    }>
+  >;
+  setQuantity: Dispatch<SetStateAction<number>>;
+  setUnit: Dispatch<SetStateAction<string>>;
+  setPrice: Dispatch<SetStateAction<number>>;
+  setNotes: Dispatch<SetStateAction<string>>;
+  setTempPrice: Dispatch<SetStateAction<string>>;
+  setTempQuantity: Dispatch<SetStateAction<string>>;
+}
+const handleButtonClick = async ({
+  currentItem,
+  items,
+  item,
+  listID,
+  setIsEmpty,
+  setIsModalVisible,
+  setItemExists,
+  setCurrentItem,
+  setName,
+  setCategory,
+  setQuantity,
+  setUnit,
+  setPrice,
+  setNotes,
+  setTempPrice,
+  setTempQuantity,
+}: handleButtonClickProps) => {
+  if (!currentItem) {
+    const itemExists = items?.find(
+      // message triggers because u clear the edit when you close the modal
+      (curItem) => {
+        return curItem.name === item?.name && curItem.unit === item.unit;
+      }
+    );
+
+    if (itemExists) {
+      notify.emoji(
+        "items already exists, displaying item information ...",
+        "📢"
+      );
+      setCurrentItem(itemExists);
+      return;
+    }
+  }
+
+  if (currentItem) {
+    itemAPI.handleItemUpdate(
+      currentItem.id,
+      {
+        ...item,
+        id: currentItem.id,
+        checked: currentItem?.checked, // add option to settings later to choose this mode
+      },
+      listID ?? ""
+    );
+    //  clear all states
+    setIsModalVisible(false);
+    setItemExists(false);
+    setCurrentItem(null);
+    clearListFields({
+      setName,
+      setCategory,
+      setQuantity,
+      setUnit,
+      setPrice,
+      setNotes,
+      setTempPrice,
+      setTempQuantity,
+    });
+  } else if (currentItem === null) {
+    await handleAddItemToList(item, items ?? [], setIsEmpty);
+    //  clear all states
+    setIsModalVisible(false);
+    setItemExists(false);
+    setCurrentItem(null);
+    clearListFields({
+      setName,
+      setCategory,
+      setQuantity,
+      setUnit,
+      setPrice,
+      setNotes,
+      setTempPrice,
+      setTempQuantity,
+    });
+  }
+};
