@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction } from "react";
 import { databaseAPI } from "../database/api/api";
 import { v7 as uuidv7 } from "uuid";
 import { List } from "../database/api/api";
-import { list } from "postcss";
 
 interface handleCreateNewListParams {
   listName: string;

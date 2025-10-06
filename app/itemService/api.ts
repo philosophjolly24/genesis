@@ -7,14 +7,12 @@ import {
   handleItemUncheck,
   handleItemUpdate,
 } from ".";
-import { handleListDelete } from "../listService";
 
 const itemAPI = {
   handleAddItemToList,
   handleItemChecked,
   getListTotalPrice,
   handleItemUpdate,
-  handleListDelete,
   handleItemSortBy,
   handleItemUncheck,
   handleDeleteCheckedItems,
