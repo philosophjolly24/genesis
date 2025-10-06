@@ -3,7 +3,7 @@ import ViewAllLists from "./components/ViewAllLists";
 import {
   asyncSetListId,
   handleCreateNewList,
-  handleListDelete,
+  handleListTrash,
   handleListRename,
 } from "./index";
 
@@ -12,7 +12,7 @@ const listAPI = {
   ListModal,
   handleCreateNewList,
   asyncSetListId,
-  handleListDelete,
+  handleListTrash,
   handleListRename,
 };
 

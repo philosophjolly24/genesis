@@ -1,18 +1,7 @@
 import { notify } from "../../util/notify";
-import { List, Item } from "../database";
+import { List, Item, Trash, ListSchema } from "../database";
 import { db } from "../database";
-
-interface ListSchema {
-  list: {
-    name: string;
-    id: string;
-    emoji: string;
-    created_at: number;
-    updated_at: number;
-  };
-
-  items: Item[];
-}
+import { v7 as uuidv7 } from "uuid";
 
 const databaseAPI = {
   // *-------------------  List Operations  ------------------- //
@@ -22,9 +11,9 @@ const databaseAPI = {
     return await db.lists.add(list);
   },
 
-  // INFO: Delete a list
-  deleteList: async (listId: string) => {
-    return await db.lists.delete(listId);
+  // TODO: refactor the  function
+  trashList: async (listID: string) => {
+    return await db.lists.delete(listID);
   },
 
   // INFO: Read a list
@@ -58,12 +47,21 @@ const databaseAPI = {
     return await db.items.delete(itemId);
   },
 
-  // INFO: Delete all items related with a list (used when deleting a list)
-  deleteALlLItemsForList: async (itemId: string[]) => {
+  // INFO: Delete all items related with a list (moves items and lists to the trash)
+  MoveToTrash: async (listID: string = "") => {
     try {
-      const deleted = await db.items.bulkDelete(itemId);
+      // get the items and list for a given id
+      const list = await databaseAPI.getList(listID);
+      const items = await databaseAPI.getAllItemsForList(listID);
+      if (!list) return null;
+      // add the list to the trash table
+      await db.trash.add({ id: uuidv7(), deleted_at: Date.now(), list, items }); // items come here
+
+      // delete the items and list from the items table
+      await db.items.bulkDelete(items.map((item) => item.id));
+      await db.lists.delete(listID);
+
       notify.success("list moved to trash");
-      return deleted;
     } catch (err) {
       notify.error(`error: ${err}`);
     }
@@ -88,7 +86,6 @@ const databaseAPI = {
   // INFO: Read for all items related with specified list
   getAllItemsForList: async (listId: string) => {
     const items = await db.items.where("list_id").equals(listId).toArray();
-
     return items.sort((a, b) => Number(a.checked) - Number(b.checked)) ?? [];
   },
   // INFO: Reads for all checked items on a list
@@ -157,7 +154,32 @@ const databaseAPI = {
       console.error(err);
     }
   },
-};
+  // *-------------------  Trash Operations  ------------------- //
 
+  restoreList: async (deletedList: ListSchema, listID: string) => {
+    try {
+      await databaseAPI.addImportedList(deletedList);
+      // delete the list after adding it
+      await db.trash.delete(listID);
+    } catch (err) {
+      notify.error(`error: ${err}`);
+    }
+  },
+
+  deleteList: async (listID: string) => {
+    await db.trash.delete(listID);
+    notify.success("list has been deleted");
+  },
+
+  getALlTrashedLists: () => db.trash.toArray(),
+
+  getTrashedList: async (listId: string) => {
+    return await db.trash.get(listId);
+  },
+
+  //* ---------------------------------------------------------------//
+};
 export { databaseAPI };
-export type { List, Item, ListSchema };
+export type { List, Item, Trash, ListSchema };
+
+//TODO: fix duplicate import error message

@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { databaseAPI } from "../database/api/api";
+import { databaseAPI, ListSchema, Trash } from "../database/api/api";
 import { saveAs } from "file-saver";
 import { Dispatch, SetStateAction } from "react";
 import Ajv from "ajv";
@@ -72,4 +72,17 @@ function validateJSON(data: string) {
     console.log(validate.errors);
   }
 }
-export { handleListExport, handleFileImport };
+
+const handleListDelete = async (listID: string) => {
+  await databaseAPI.deleteList(listID);
+};
+
+const handleListRestore = async (list: ListSchema, listID: string) => {
+  await databaseAPI.restoreList(list, listID);
+};
+export {
+  handleListExport,
+  handleFileImport,
+  handleListDelete,
+  handleListRestore,
+};
