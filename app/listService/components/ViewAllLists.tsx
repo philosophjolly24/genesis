@@ -221,7 +221,7 @@ function DeleteModal({
         <button
           className="bg-brand font-bold text-background-white text-2xl w-full h-13 rounded-sm tracking-wider"
           onClick={async () => {
-            await listAPI.handleListDelete(modalID);
+            await listAPI.handleListTrash(modalID);
             setIsDeleteModalVisible(false);
           }}
         >

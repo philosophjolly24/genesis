@@ -37,16 +37,9 @@ const handleCreateNewList = async ({
   setIsVisible(false);
 };
 
-const handleListDelete = async (listID: string) => {
-  const items = databaseAPI.getAllItemsForList(listID);
-  // get all ids of items
-  const itemId = (await items).map((item) => {
-    return item.id;
-  });
-  // delete the list
-  await databaseAPI.deleteList(listID);
-  // delete all items for selected list
-  await databaseAPI.deleteALlLItemsForList(itemId);
+const handleListTrash = async (listID: string) => {
+  // Move all items to the trash
+  await databaseAPI.MoveToTrash(listID);
 };
 
 // INFO: asyncSetListId: set the current list id to retrieve the list items
@@ -67,6 +60,6 @@ async function handleListRename(updatedName: string, listID: string) {
 export {
   handleCreateNewList,
   asyncSetListId,
-  handleListDelete,
+  handleListTrash,
   handleListRename,
 };

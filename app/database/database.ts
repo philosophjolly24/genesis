@@ -16,10 +16,26 @@ interface Item {
 }
 interface List {
   id: string;
-  emoji?: string;
+  emoji: string;
   name: string;
   created_at: number;
   updated_at: number;
+}
+interface ListSchema {
+  list: {
+    name: string;
+    id: string;
+    emoji: string;
+    created_at: number;
+    updated_at: number;
+  };
+
+  items: Item[];
+}
+
+interface Trash extends ListSchema {
+  id: string;
+  deleted_at: number;
 }
 
 const db = new Dexie("GenesisDB") as Dexie & {
@@ -31,14 +47,19 @@ const db = new Dexie("GenesisDB") as Dexie & {
     Item,
     "id" // primary key "id"
   >;
+  trash: EntityTable<
+    Trash,
+    "id" // primary key "id"
+  >;
 };
 
 // Schema declaration:
-db.version(2).stores({
+db.version(3).stores({
   categories: "++id, name",
   lists: "id, name,created_at,updated_at",
   items: "id,list_id,name,notes,checked,price,quantity,unit",
+  trash: "id,deleted_at",
 });
 
-export type { List, Item };
+export type { List, Item, ListSchema, Trash };
 export { db };
