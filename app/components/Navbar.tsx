@@ -102,7 +102,12 @@ export default function Navbar() {
                 <p className="block grow max-w-20">home</p>
               </li>
             </Link>
-            <Link
+
+            {/*
+            // NOTE: considering what to do here
+             */}
+
+            {/* <Link
               href={"/settings"}
               className="flex items-center justify-between flex-row gap-2 m-auto w-full"
             >
@@ -119,7 +124,7 @@ export default function Navbar() {
                 ></Image>
                 <p className="block grow max-w-20">settings</p>
               </li>
-            </Link>
+            </Link> */}
             <Link
               href={"/trash"}
               className="flex items-center justify-between flex-row  gap-2 m-auto w-full"

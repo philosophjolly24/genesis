@@ -10,7 +10,6 @@ export default function Home() {
   // NOTE: importing the components from the  listService  API
   const ViewAllLists = listAPI.ViewAllLists;
   const CreateNewList = listAPI.ListModal;
-
   const [isModalVisible, setIsModalVisible] = useState(false); // * state for modal window
 
   return (
@@ -41,9 +40,6 @@ export default function Home() {
       // NOTE: Where all the users lists will be displayed 
        */}
       <ViewAllLists></ViewAllLists>
-      {/* 
-      // ? Testing the file upload
-      */}
     </>
   );
 }

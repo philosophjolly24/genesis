@@ -1,7 +1,7 @@
 export default function Page() {
   return (
     <>
-      <p>settings page</p>
+      <p>coming soon</p>
     </>
   );
 }

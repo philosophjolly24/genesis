@@ -2,7 +2,6 @@
 
 // * Imports
 import { use, useEffect, useRef, useState } from "react";
-
 import { databaseAPI, Item } from "../database/api/api";
 import Button from "../components/Button";
 import ItemCard from "../itemService/components/ItemCard";
@@ -22,7 +21,7 @@ export default function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
   const [query, setQuery] = useState("");
-  const { items, itemsChecked, list, listID, filteredItems } = use(ItemContext);
+  const { items, itemsChecked, list, listID } = use(ItemContext);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [allItems, setAllItems] = useState<Item[] | undefined>(items);
   // prevent scroll when modal is open
@@ -167,8 +166,3 @@ export default function Home() {
       </>
     );
 }
-
-// ! FIX: update the list updated_at field in the database on every item change
-// ! FIX: context menu padding(maybe?)
-// TODO: search
-// TODO: more options popup
