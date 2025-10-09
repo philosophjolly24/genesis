@@ -16,7 +16,6 @@ import Modal from "../../components/Modal";
 import { clearListFields } from "../../util/clearFields";
 import { formatCurrency } from "../../settings";
 import DropDown from "../../components/Dropdown";
-import { ListboxOption } from "@headlessui/react";
 import Button from "../../components/Button";
 import { handleAddItemToList, handleItemDelete } from "..";
 import { itemAPI } from "../api";
@@ -133,7 +132,7 @@ export default function ItemModal({
         <div className="flex items-center justify-center w-full gap-3">
           <h1 className="font-open-sans text-3xl font-[550] text-center py-10  m-a text-black-1 truncate sticky max-w-[90%] grow">
             {/*
-         // NOTE: (currentItem !== null ?) checks whether an item will be updated or whether a user wants to add a new item
+         // NOTE: (currentItem === null && itemExists === false) checks whether an item will be updated or whether a user wants to add a new item
          */}
             {(currentItem === null && itemExists === false) ||
             heading.current === ""
@@ -271,18 +270,7 @@ export default function ItemModal({
           options={categories}
           setSelectedCategory={setCategory}
           selectedCategory={category}
-          className=""
-        >
-          {categories.map((category) => (
-            <ListboxOption
-              key={category.id}
-              value={category}
-              className="data-focus:bg-brand data-focus:text-white text-center"
-            >
-              {category.name}
-            </ListboxOption>
-          ))}
-        </DropDown>
+        ></DropDown>
 
         {/* 
         // #:-------------------  Feature: Notes  ------------------- //
@@ -301,7 +289,7 @@ export default function ItemModal({
       */}
         <Button
           onClick={async () =>
-            handleButtonClick({
+            handleItemModalButton({
               currentItem,
               items,
               item,
@@ -352,7 +340,7 @@ export default function ItemModal({
   );
 }
 
-interface handleButtonClickProps {
+interface handleItemModalButtonProps {
   currentItem: Item | null;
   item: Item;
   items: Item[] | undefined;
@@ -375,7 +363,7 @@ interface handleButtonClickProps {
   setTempPrice: Dispatch<SetStateAction<string>>;
   setTempQuantity: Dispatch<SetStateAction<string>>;
 }
-const handleButtonClick = async ({
+const handleItemModalButton = async ({
   currentItem,
   items,
   item,
@@ -392,7 +380,7 @@ const handleButtonClick = async ({
   setNotes,
   setTempPrice,
   setTempQuantity,
-}: handleButtonClickProps) => {
+}: handleItemModalButtonProps) => {
   if (!currentItem) {
     const itemExists = items?.find(
       // message triggers because u clear the edit when you close the modal
@@ -417,7 +405,7 @@ const handleButtonClick = async ({
       {
         ...item,
         id: currentItem.id,
-        checked: currentItem?.checked, // add option to settings later to choose this mode
+        checked: currentItem?.checked, // TODO: add option to settings later to choose this mode
       },
       listID ?? ""
     );

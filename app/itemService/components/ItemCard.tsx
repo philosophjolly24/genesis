@@ -14,9 +14,12 @@ interface ItemCardProps {
 
 export default function ItemCard({ item }: ItemCardProps) {
   const [checked, setChecked] = useState(item.checked);
+  
+  // saving checked state in a  state to style components
   useEffect(() => {
     setChecked(item.checked);
   }, [item.checked]);
+
   const categoryIconPath = `${item.category?.name
     .replaceAll(" ", "-")
     .trim()

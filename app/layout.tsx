@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
@@ -9,7 +8,7 @@ export const metadata = {
   description: "an offline shopping list manager app",
   manifest: "./manifest.json",
   icons: {
-    // Primary favicon (will automatically handle icon file conventions)
+    // Primary favicon
     icon: [
       {
         url: "/favicon.ico", // Standard ICO file
