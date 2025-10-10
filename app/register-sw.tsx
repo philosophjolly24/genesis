@@ -1,5 +1,6 @@
 // app/register-sw.tsx
 "use client";
+
 import { useEffect } from "react";
 
 export default function RegisterSW() {
@@ -14,5 +15,5 @@ export default function RegisterSW() {
     }
   }, []);
 
-  return null; // this component just runs the effect
+  return null; // component doesn’t render anything
 }
