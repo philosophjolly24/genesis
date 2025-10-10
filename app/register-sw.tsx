@@ -1,19 +1,18 @@
-// _app.tsx
+// app/register-sw.tsx
+"use client";
 import { useEffect } from "react";
 
-function MyApp({ Component, pageProps }) {
+export default function RegisterSW() {
   useEffect(() => {
     if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/service-worker.js")
         .then((registration) => {
-          console.log("Service Worker registered:", registration.scope);
+          console.log("✅ SW registered:", registration.scope);
         })
-        .catch((err) => console.error("SW registration failed:", err));
+        .catch((err) => console.error("❌ SW failed:", err));
     }
   }, []);
 
-  return <Component {...pageProps} />;
+  return null; // this component just runs the effect
 }
-
-export default MyApp;

@@ -1,7 +1,11 @@
 declare module "next-pwa" {
   import type { NextConfig } from "next";
 
-  interface WorkboxOptions {
+  interface PWAOptions {
+    dest: string;
+    register?: boolean;
+    skipWaiting?: boolean;
+    disable?: boolean;
     runtimeCaching?: Array<{
       urlPattern: RegExp | string;
       handler: "NetworkFirst" | "CacheFirst" | "StaleWhileRevalidate";
@@ -13,14 +17,6 @@ declare module "next-pwa" {
         };
       };
     }>;
-  }
-
-  interface PWAOptions {
-    dest: string;
-    register?: boolean;
-    skipWaiting?: boolean;
-    disable?: boolean;
-    workboxOptions?: WorkboxOptions; // <-- added this
   }
 
   export default function withPWA(
