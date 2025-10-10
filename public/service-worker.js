@@ -72,7 +72,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 3️⃣ Cache dynamic pages after first visit (optional)
   if (/\/list\/.*/i.test(request.url)) {
     event.respondWith(
       fetch(request)
