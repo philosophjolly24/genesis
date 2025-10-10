@@ -8,9 +8,15 @@ declare module "next-pwa" {
     disable?: boolean;
     runtimeCaching?: Array<{
       urlPattern: RegExp | string;
-      handler: "NetworkFirst" | "CacheFirst" | "StaleWhileRevalidate";
+      handler:
+        | "NetworkFirst"
+        | "CacheFirst"
+        | "StaleWhileRevalidate"
+        | "NetworkOnly"
+        | "CacheOnly";
       options?: {
         cacheName?: string;
+        networkTimeoutSeconds?: number;
         expiration?: {
           maxEntries?: number;
           maxAgeSeconds?: number;
