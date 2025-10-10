@@ -18,7 +18,7 @@ export default withPWA({
         options: {
           cacheName: "offline-cache",
           expiration: {
-            maxEntries: 100, // Limit number of cached entries
+            maxEntries: 120, // Limit number of cached entries
           },
         },
       },
