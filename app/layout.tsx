@@ -2,6 +2,7 @@ import "./globals.css";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import { ItemProvider } from "./context/appContext";
+import Head from "next/head";
 
 export const metadata = {
   title: "Genesis",
@@ -37,12 +38,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`w-svw h-svh m-0`}>
+      <Head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#ffb343" />
+      </Head>
+      <body className="w-svw h-svh m-0">
         <ItemProvider>
           <div className="flex items-center justify-between mb-10 sticky inset-0 z-20 bg-background-white ">
-            <Navbar></Navbar>
+            <Navbar />
             <Link href={"/"} className="m-auto">
-              <h1 className="font-open-sans text-[38px] font-extrabold text-brand text-center block w-fit m-auto  ">
+              <h1 className="font-open-sans text-[38px] font-extrabold text-brand text-center block w-fit m-auto">
                 Genesis
               </h1>
             </Link>
