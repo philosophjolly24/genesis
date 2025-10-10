@@ -2,6 +2,7 @@ import "./globals.css";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import { ItemProvider } from "./context/appContext";
+import Head from "next/head";
 
 export const metadata = {
   title: "Genesis",
