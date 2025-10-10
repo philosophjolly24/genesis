@@ -13,14 +13,17 @@ export default withPWA({
   workboxOptions: {
     runtimeCaching: [
       {
-        urlPattern: /.*/, // Match all requests
-        handler: "NetworkFirst", // Fetch from network first, fallback to cache
+        urlPattern: /^\/_next\/.*/, // Next.js compiled JS/CSS
+        handler: "CacheFirst",
         options: {
-          cacheName: "offline-cache",
-          expiration: {
-            maxEntries: 120, // Limit number of cached entries
-          },
+          cacheName: "static-resources",
+          expiration: { maxEntries: 60 },
         },
+      },
+      {
+        urlPattern: /^\/.*$/, // Pages and other assets
+        handler: "NetworkFirst",
+        options: { cacheName: "pages" },
       },
     ],
   },
