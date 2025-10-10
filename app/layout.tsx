@@ -2,7 +2,7 @@ import "./globals.css";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import { ItemProvider } from "./context/appContext";
-import Head from "next/head";
+import RegisterSW from "./register-sw";
 
 export const metadata = {
   title: "Genesis",
@@ -39,6 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="w-svw h-svh m-0">
+        <RegisterSW />
         <ItemProvider>
           <div className="flex items-center justify-between mb-10 sticky inset-0 z-20 bg-background-white ">
             <Navbar />

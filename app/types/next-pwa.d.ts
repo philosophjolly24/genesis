@@ -20,7 +20,17 @@ declare module "next-pwa" {
     register?: boolean;
     skipWaiting?: boolean;
     disable?: boolean;
-    workboxOptions?: WorkboxOptions; // <-- added this
+    runtimeCaching?: Array<{
+      urlPattern: RegExp | string;
+      handler: "NetworkFirst" | "CacheFirst" | "StaleWhileRevalidate";
+      options?: {
+        cacheName?: string;
+        expiration?: {
+          maxEntries?: number;
+          maxAgeSeconds?: number;
+        };
+      };
+    }>;
   }
 
   export default function withPWA(
