@@ -7,7 +7,7 @@ import Head from "next/head";
 export const metadata = {
   title: "Genesis",
   description: "an offline shopping list manager app",
-  manifest: "./manifest.json",
+  manifest: "/manifest.json",
   icons: {
     // Primary favicon
     icon: [
@@ -38,10 +38,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#ffb343" />
-      </Head>
       <body className="w-svw h-svh m-0">
         <ItemProvider>
           <div className="flex items-center justify-between mb-10 sticky inset-0 z-20 bg-background-white ">

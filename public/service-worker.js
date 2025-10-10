@@ -3,10 +3,10 @@ self.addEventListener("install", (event) => {
     caches.open("my-cache").then((cache) => {
       return cache.addAll([
         "/",
-        "/index.html",
-        "/styles.css",
-        "/script.js",
-        // Add other assets you want to cache
+        "/manifest.json",
+        "/genesis-192x192.png",
+        "/genesis-512x512.png",
+        "/favicon.ico",
       ]);
     })
   );
