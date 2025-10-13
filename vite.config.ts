@@ -17,7 +17,6 @@ export default defineConfig({
         "index.html",
         "genesis-192x192.png",
         "genesis-512x512.png",
-        // Add any other static assets here (SVGs/images)
       ],
       manifest: {
         name: "Genesis",
@@ -32,8 +31,8 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ["index.html", "**/*.{js,css,svg,png,woff2}"], // Precache everything important
-        navigateFallback: "/index.html", // SPA routing offline
+        globPatterns: ["index.html", "**/*.{js,css,svg,png,woff2}"], 
+        navigateFallback: "/index.html", 
         runtimeCaching: [
           // API calls
           {
