@@ -6,6 +6,7 @@ import { useEffect, useState, createContext } from "react";
 import { databaseAPI, type Item, type List } from "../database/api/api";
 import useCheckedItemCount from "../hooks/useCheckedItemCount";
 import { useParams } from "react-router";
+import Loading from "../pages/Loading";
 
 // Props for the provider
 interface ItemProviderProps {
@@ -81,7 +82,7 @@ function ItemProvider({ children }: ItemProviderProps) {
   const itemsChecked = useCheckedItemCount(listID);
 
   if (isLoading || items === undefined) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
