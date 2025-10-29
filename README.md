@@ -46,6 +46,8 @@ After running the dev server, open your browser at: ``` http://localhost:5173 ``
 
 - **Dexie.js**: A minimal wrapper for IndexedDB, providing offline data storage
   
+- **Tailwind CSS**: A utility-first CSS framework for modern, responsive styling
+  
 ---
 
 ## Future Plans
