@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# Genesis
+*A private, offline shopping list app built for simplicity and speed.*
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Genesis** is an offline-first shopping list manager built with **React**, **TypeScript**, and **Vite**.  
+It leverages **Dexie.js** for IndexedDB storage, enabling smooth offline usage and data persistence.  
+With Genesis, users can create and manage multiple customizable shopping lists that work entirely on the client-side — no backend required.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Fully offline support:** Store data locally with Dexie.js and use PWA caching to ensure the app works without an internet connection.  
+- **Customizable lists:** Create, edit, and organize multiple shopping lists to suit different needs and occasions.  
+- **Data export:** Export or download shopping lists as files for easy sharing and backup.  
+- **Client-side only:** Everything runs in the browser (no server or backend needed).  
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Before getting started, ensure you have the following installed:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Node.js** v18 or higher  
+- **npm** (comes with Node.js)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Then clone the repository and install the dependencies:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/philosophjolly24/genesis.git
+cd genesis
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+After running the dev server, open your browser at: ``` http://localhost:5173 ``` (or the URL shown in your terminal) to use the app.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Tech Stack
+
+- **React**: A library for building user interfaces
+
+- **TypeScript**: A statically typed superset of JavaScript
+
+- **Vite**: A fast build tool and development server
+
+- **Dexie.js**: A minimal wrapper for IndexedDB, providing offline data storage
+  
+---
+
+## Future Plans
+
+- **Cloud sync**: Integrate optional cloud synchronization for syncing lists across devices
+
+- **Mobile improvements**: Enhance mobile support and responsive design for smaller screens
+
+- **Enhanced exports**: Add more export formats (e.g., CSV or JSON) and import functionality
+
+- **UI/UX enhancements**: Improve styling, animations, and overall user experience based on feedback
