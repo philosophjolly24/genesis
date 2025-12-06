@@ -1,6 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { databaseAPI } from "../database/api/api";
 
+// gets the count of all selected items in a list
 export default function useCheckedItemCount(listID: string) {
   const items = useLiveQuery(async () => {
     if (!listID) return;
