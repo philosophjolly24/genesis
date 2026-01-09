@@ -54,7 +54,7 @@ After running the dev server, open your browser at: ``` http://localhost:5173 ``
 
 - **Cloud sync**: Integrate optional cloud synchronization for syncing lists across devices
 
-- **Mobile improvements**: Enhance mobile support and responsive design for smaller screens
+- **Desktop improvements**: Enhance desktop support and responsive design for larger devices
 
 - **Enhanced exports**: Add more export formats (e.g., CSV or JSON) and import functionality
 
