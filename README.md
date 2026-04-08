@@ -47,15 +47,3 @@ After running the dev server, open your browser at: ``` http://localhost:5173 ``
 - **Dexie.js**: A minimal wrapper for IndexedDB, providing offline data storage
   
 - **Tailwind CSS**: A utility-first CSS framework for modern, responsive styling
-  
----
-
-## Future Plans
-
-- **Cloud sync**: Integrate optional cloud synchronization for syncing lists across devices
-
-- **Desktop improvements**: Enhance desktop support and responsive design for larger devices
-
-- **Enhanced exports**: Add more export formats (e.g., CSV or JSON) and import functionality
-
-- **UI/UX enhancements**: Improve styling, animations, and overall user experience based on feedback
